@@ -8,6 +8,6 @@
 
 from loader import DAVISAnnotationLoader,DAVISSegmentationLoader
 
-from utils import db_statistics,db_eval,db_read_properties,db_read_benchmark,db_read_eval,\
+from utils import db_statistics,db_eval,db_read_info,db_read_benchmark,db_read_eval,\
 		db_read_techniques,db_read_eval,db_save_eval,db_read_sequences,db_save_techniques
 

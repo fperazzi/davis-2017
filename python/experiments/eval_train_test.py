@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # ----------------------------------------------------------------------------
-# A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation
+# S Benchmark Dataset and Evaluation Methodology for Video Object Segmentation
 #-----------------------------------------------------------------------------
 # Copyright (c) 2016 Federico Perazzi
 # Licensed under the BSD License [see LICENSE for details]
@@ -9,7 +9,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Peform per-attribute evaluation as reported in the accompanying paper.
+Peform evaluation on separately on training and test set.
 
 EXAMPLE:
 	python tools/eval_all.py
@@ -27,20 +27,17 @@ from davis import cfg
 from davis.dataset import *
 
 from prettytable import PrettyTable as ptable
+import matplotlib.pylab as plt
 
 def parse_args():
-
 	parser = argparse.ArgumentParser(
-			description='Peform per-attribute evaluation.')
+			description='Split evaluation between training and test set.')
 
 	parser.add_argument('--measure', dest='measure',default='J',
 			help='Measure selected for evaluation.')
 
 	parser.add_argument('--statistic', dest='statistic',default='M',
 			help='Measure statistics: [M]ean,[R]ecall,[D]ecay.')
-
-	parser.add_argument('--attributes', dest='attributes',default=['AC','DB','FM','MB','OCC'],
-			nargs='+', help='Select (set of) attributes to be displayed.')
 
 	args = parser.parse_args()
 
@@ -51,17 +48,24 @@ if __name__ == '__main__':
 	# Parse command-line arguments
 	args = parse_args()
 
-	db_sequences  = db_read_sequences()
+	db_info = db_read_info()
 	db_techniques = db_read_techniques()
 
-	A = []
+	attributes = db_info.attributes
+	distr      = []
+	S          = []
 
-	for attribute in args.attributes:
-		# Filter sequences tagged with `attribute`
-		sequences = filter(
-				lambda s: attribute in s.attributes,db_sequences)
+	for t_set in db_info.sets:
+		# Filter sequences tagged with set=`t_set`
+		X = []
+		db_sequences = filter(
+				lambda s: t_set == s.set ,db_info.sequences)
+		for s in db_sequences:
+			X.append([1 if attr in s.attributes else 0for attr in attributes ])
 
-		db_eval_dict = db_read_eval(sequence=[s.name for s in sequences],
+		distr.append(np.round(np.sum(X,axis=0).astype(np.float32)/np.sum(X),3))
+
+		db_eval_dict = db_read_eval(sequence=[s.name for s in db_sequences],
 				measure=args.measure,raw_eval=False)
 
 		statistics_to_id = {'M':0,'O':1,'D':2}
@@ -71,12 +75,21 @@ if __name__ == '__main__':
 			R.append(np.vstack(db_eval_dict[t.name][
 				args.measure].values())[:,statistics_to_id[args.statistic]])
 
-		A.append(np.average(np.array(R).T,axis=0))
+		S.append(np.average(np.array(R).T,axis=0))
 
-	table = ptable(["Attribute"] +
+	print "\nAttributes Distribution"
+
+	table = ptable(["Set"] + attributes)
+	for attr,row in zip(db_info.sets,distr):
+		table.add_row([attr] + \
+				['{: .2f}'.format(np.round(r,2)) for r in row])
+	print table
+
+	table = ptable(["Set"] +
 			[t.name for t in db_techniques])
 
-	for attr,row in zip(args.attributes,A):
+	print "\nEvaluation (%s)"%args.measure
+	for attr,row in zip(db_info.sets,S):
 		table.add_row([attr] + \
 				['{: .2f}'.format(np.round(r,2)) for r in row])
 
