@@ -64,7 +64,7 @@ Please cite `DAVIS` in your publications if it helps your research:
 
 Terms of Use
 --------------
-Licensed under the BSD License [see LICENSE for details]
+Released under the BSD License [see LICENSE for details]
 
 Contacts
 ------------------

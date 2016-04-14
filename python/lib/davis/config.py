@@ -4,6 +4,7 @@
 # Copyright (c) 2016 Federico Perazzi
 # Licensed under the BSD License [see LICENSE for details]
 # Written by Federico Perazzi
+# Adapted from FAST-RCNN (Ross Girshick)
 # ----------------------------------------------------------------------------
 
 """ Configuration file."""
@@ -27,7 +28,7 @@ __C.PATH = edict()
 __C.RESOLUTION="480p"
 
 # Root folder of project
-__C.PATH.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..', '..'))
+__C.PATH.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..', '..','..'))
 
 # Data folder
 __C.PATH.DATA_DIR       = osp.abspath(osp.join(__C.PATH.ROOT_DIR, 'data/davis'))
