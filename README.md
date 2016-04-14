@@ -22,9 +22,9 @@ Required:
 Installation
 --------------
 1. pip install virtualenv virtualenvwrapper
-2. pip install -r requirements.txt
-3. export PATH=DAVIS_ROOT
-4. export PYTHONPATH=$DAVIS_ROOT/python/lib
+2. mkvirtualenv davis
+3. pip install -r python/requirements.txt
+4. export PYTHONPATH=$(pwd)/python/lib
 
 Documentation
 ----------------
