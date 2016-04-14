@@ -70,8 +70,8 @@ The directory is structured as follows:
  * `ROOT/python/lib/davis`  : library package contains helper function for parsing and evaluating DAVIS
 
  * `ROOT/data` :
-		 - `get_davis.sh`: download input images and annotations.
-		 - `get_davis_cvpr2016_results.sh`: download the CVPR 2016 submission results.
+     - `get_davis.sh`: download input images and annotations.
+     - `get_davis_cvpr2016_results.sh`: download the CVPR 2016 submission results.
 
 
 
