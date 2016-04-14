@@ -6,6 +6,11 @@ Package containing helper functions for loading and evaluating [DAVIS](https://g
 
 Introduction
 --------------
+DAVIS (Densely Annotated VIdeo Segmentation), consists of fifty high quality,
+Full HD video sequences, spanning multiple occurrences of common video object
+segmentation challenges such as occlusions, motion-blur and appearance
+changes. Each video is accompanied by densely annotated, pixel-accurate and
+per-frame ground truth segmentation.
 
 Citation
 --------------
