@@ -78,4 +78,4 @@ The directory is structured as follows:
 Contacts
 ------------------
 - [Federico Perazzi](https://graphics.ethz.ch/~perazzif)
-
+- [Jordi Pont-Tuset](http://jponttuset.github.io)
