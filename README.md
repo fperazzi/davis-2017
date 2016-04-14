@@ -7,10 +7,17 @@ Package containing helper functions for loading and evaluating [DAVIS](https://g
 Dependencies
 ------------
 Required:
- * cmake
- * c++11 compiler( g++-4.7 or higher, vc++2013 or higher, clang might work too )
- * Eigen3
- * libpng and libjpg (needed by cimg)
+	* Cython==0.24
+	* PyYAML==3.11
+	* argparse==1.2.1
+	* easydict==1.6
+	* future==0.15.2
+	* h5py==2.6.0
+	* matplotlib==1.5.1
+	* numpy==1.11.0
+	* prettytable==0.7.2
+	* scikit-image==0.12.3
+	* scipy==0.17.0
 
 Installation
 --------------
@@ -58,5 +65,4 @@ Licensed under the BSD License [see LICENSE for details]
 
 Contacts
 ------------------
-- [Federico Perazzi](federico@disneyresearch.com)
-
+- [Federico Perazzi](https://graphics.ethz.ch/~perazzif)
