@@ -66,3 +66,4 @@ Licensed under the BSD License [see LICENSE for details]
 Contacts
 ------------------
 - [Federico Perazzi](https://graphics.ethz.ch/~perazzif)
+
