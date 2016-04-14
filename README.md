@@ -22,7 +22,8 @@ Required:
 Installation
 --------------
 1. pip install virtualenv virtualenvwrapper
-2. mkvirtualenv davis
+2. source /usr/local/bin/virtualenvwrapper.sh
+3. mkvirtualenv davis
 3. pip install -r python/requirements.txt
 4. export PYTHONPATH=$(pwd)/python/lib
 
@@ -39,7 +40,9 @@ The directory is structured as follows:
  * `ROOT/python/experiments`: contains several demonstrative examples.
  * `ROOT/python/lib/davis`  : library package contains helper function for parsing and evaluating DAVIS
 
- * `ROOT/data` : run `get_davis.sh` to obtain input images and annotations.
+ * `ROOT/data` :
+		 - `get_davis.sh`: download input images and annotations.
+		 - `get_davis_cvpr2016_results.sh`: download the CVPR 2016 submission results.
 
 
 Citation
