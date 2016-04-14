@@ -4,6 +4,30 @@ A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation (DA
 
 Package containing helper functions for loading and evaluating [DAVIS](https://graphics.ethz.ch/~perazzif/davis/index.html).
 
+Introduction
+--------------
+
+Citation
+--------------
+
+Please cite `DAVIS` in your publications if it helps your research:
+
+    `@inproceedings{Perazzi_CVPR_2016,
+      author    = {Federico Perazzi and
+                   Jordi Pont-Tuset and
+                   Brian McWilliams and
+                   Luc Van Gool and
+                   Markus Gross and
+                   Alexander Sorkine-Hornung},
+      title     = {A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation},
+      booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+      year      = {2016}
+    }`
+
+Terms of Use
+--------------
+DAVIS is released under the BSD License [see LICENSE for details]
+
 Dependencies
 ------------
 Required:
@@ -45,26 +69,6 @@ The directory is structured as follows:
 		 - `get_davis_cvpr2016_results.sh`: download the CVPR 2016 submission results.
 
 
-Citation
---------------
-
-Please cite `DAVIS` in your publications if it helps your research:
-
-    `@inproceedings{Perazzi_CVPR_2016,
-      author    = {Federico Perazzi and
-                   Jordi Pont-Tuset and
-                   Brian McWilliams and
-                   Luc Van Gool and
-                   Markus Gross and
-                   Alexander Sorkine-Hornung},
-      title     = {A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation},
-      booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-      year      = {2016}
-    }`
-
-Terms of Use
---------------
-Released under the BSD License [see LICENSE for details]
 
 Contacts
 ------------------

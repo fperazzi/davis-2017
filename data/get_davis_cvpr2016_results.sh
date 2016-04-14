@@ -1,10 +1,7 @@
 #!/bin/bash
 
 # This scripts downloads the DAVIS data and unzips it.
-# It's an adaptation of a script written by Ross Girshick.
-
-#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
-#cd $DIR
+# Adaptation of a script written in Faster R-CNN (Ross Girshick)
 
 FILE=davis-results-cvpr2016.zip
 URL=https://graphics.ethz.ch/Downloads/Data/Davis

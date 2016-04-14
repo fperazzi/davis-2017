@@ -36,7 +36,8 @@ def parse_args():
 			help='Path to the HDF5 evaluation file to be displayed.')
 
 	# Parse command-line arguments
-	args = parser.parse_args()
+	args       = parser.parse_args()
+	args.input = osp.abspath(args.input)
 
 	return args
 
