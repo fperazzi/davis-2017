@@ -56,4 +56,4 @@ __C.FILES.DB_INFO = osp.abspath(osp.join(__C.PATH.DATA_DIR,"Annotations/db_info.
 # Path to technique file, holding information about benchmark data
 __C.FILES.DB_BENCHMARK = osp.abspath(osp.join(__C.PATH.RESULTS_DIR,"Evaluation/db_benchmark.yml"))
 
-__C.N_JOBS = 32
+__C.N_JOBS = 8
