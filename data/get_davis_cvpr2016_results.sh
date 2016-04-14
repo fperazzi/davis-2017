@@ -5,7 +5,7 @@
 
 FILE=davis-results-cvpr2016.zip
 URL=https://graphics.ethz.ch/Downloads/Data/Davis
-CHECKSUM=614f86ff5cb1e4c4e27c00aa7b507d02
+CHECKSUM=24e828e81c1bdf1640d2c2ed0fa9de41
 
 if [ ! -f $FILE ]; then
 	echo "Downloading DAVIS input (1.9GB)..."
