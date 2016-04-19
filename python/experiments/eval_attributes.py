@@ -42,6 +42,10 @@ def parse_args():
 	parser.add_argument('--attributes', dest='attributes',default=['AC','DB','FM','MB','OCC'],
 			nargs='+', help='Select (set of) attributes to be displayed.')
 
+	parser.add_argument('--cvpr2016',
+			dest='cvpr2016',action='store_true',
+			help='Evaluate the subset of techniques available during the cvpr2016 submission.')
+
 	args = parser.parse_args()
 
 	return args
@@ -51,8 +55,11 @@ if __name__ == '__main__':
 	# Parse command-line arguments
 	args = parse_args()
 
+	db_name = cfg.FILES.DB_BENCHMARK_CVPR2016 if args.cvpr2016 else \
+			cfg.FILES.DB_BENCHMARK
+
 	db_sequences  = db_read_sequences()
-	db_techniques = db_read_techniques()
+	db_techniques = db_read_techniques(db_name)
 
 	A = []
 

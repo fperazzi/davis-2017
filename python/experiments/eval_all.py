@@ -35,14 +35,16 @@ def parse_args():
 			dest='compute',action='store_true',
 			help='Compute results instead of loading from file.')
 
+	parser.add_argument('--cvpr2016',
+			dest='cvpr2016',action='store_true',
+			help='Evaluate the subset of techniques available during the cvpr2016 submission.')
+
 	# Parse command-line arguments
 	return parser.parse_args()
 
 if __name__ == '__main__':
 
 	args = parse_args()
-
-
 
 	if args.compute:
 		print "- DAVIS: Running full evaluation."
@@ -68,7 +70,10 @@ if __name__ == '__main__':
 		#db_save_techniques(db_eval_dict) # UNCOMMENT after T measure is implemented
 
 	# Read available techniques and print results
-	db_techniques = db_read_techniques() # NEED SOME RENAMING
+	db_name = cfg.FILES.DB_BENCHMARK_CVPR2016 if args.cvpr2016 else \
+			cfg.FILES.DB_BENCHMARK
+
+	db_techniques = db_read_techniques(db_name) # NEED SOME RENAMING
 
 	# Display results
 	table = ptable(['Measure']+[t.name for t in db_techniques])

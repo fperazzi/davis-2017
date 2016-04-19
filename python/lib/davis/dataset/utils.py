@@ -117,21 +117,21 @@ def db_eval(techniques,sequences,inputdir=cfg.PATH.RESULTS_DIR):
 #####################################################
 def db_read_info():
 	""" Read dataset properties from file."""
-	with open(osp.join(cfg.FILES.DB_INFO),'r') as f:
+	with open(cfg.FILES.DB_INFO,'r') as f:
 		return edict(yaml.load(f))
 
-def db_read_benchmark():
+def db_read_benchmark(db_name=cfg.FILES.DB_BENCHMARK):
 	""" Read benchmark data from file."""
-	with open(osp.join(cfg.FILES.DB_BENCHMARK),'r') as f:
+	with open(db_name,'r') as f:
 		return edict(yaml.load(f.read()))
 
 def db_read_sequences():
 	""" Read list of sequences. """
 	return db_read_info().sequences
 
-def db_read_techniques():
+def db_read_techniques(db_name=cfg.FILES.DB_BENCHMARK):
 	""" Read list of benchmarked techniques."""
-	return db_read_benchmark().techniques
+	return db_read_benchmark(db_name).techniques
 
 def db_read_eval(technique=None,measure=None,
 		sequence=None,raw_eval=False,inputdir=cfg.PATH.EVAL_DIR):

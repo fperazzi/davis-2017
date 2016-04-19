@@ -54,6 +54,9 @@ __C.FILES = edict()
 __C.FILES.DB_INFO = osp.abspath(osp.join(__C.PATH.DATA_DIR,"Annotations/db_info.yml"))
 
 # Path to technique file, holding information about benchmark data
-__C.FILES.DB_BENCHMARK = osp.abspath(osp.join(__C.PATH.RESULTS_DIR,"Evaluation/db_benchmark.yml"))
+__C.FILES.DB_BENCHMARK          = osp.abspath(
+		osp.join(__C.PATH.RESULTS_DIR,"Evaluation/db_benchmark.yml"))
+__C.FILES.DB_BENCHMARK_CVPR2016 = osp.abspath(
+		osp.join(__C.PATH.RESULTS_DIR,"Evaluation/db_benchmark_cvpr2016.yml"))
 
 __C.N_JOBS = 8
