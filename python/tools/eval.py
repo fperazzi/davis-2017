@@ -50,10 +50,10 @@ if __name__ == '__main__':
 
 	args = parse_args()
 
-	#db_eval_dict = db_eval(osp.basename(args.input),
-			#os.listdir(args.input),osp.dirname(args.input))
+	db_eval_dict = db_eval(osp.basename(args.input),
+			os.listdir(args.input),osp.dirname(args.input))
 
 	print "Saving results in: %s"%osp.join(
 			args.output,osp.basename(args.input))+".h5"
 
-	#db_save_eval(db_eval_dict,outputdir=args.output)
+	db_save_eval(db_eval_dict,outputdir=args.output)
