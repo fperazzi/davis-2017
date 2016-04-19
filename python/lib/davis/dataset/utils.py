@@ -214,7 +214,7 @@ def db_save_techniques(db_eval_dict,filename=cfg.FILES.DB_BENCHMARK):
 						 'measures':['J','F','T']}
 
 	method_type = [('preprocessing' , ['mcg', 'sf-lab','sf-mot']),
-								 ('unsupervised  ', ['nlc', 'cvos', 'trc', 'msg', 'key', 'sal', 'fst']),
+								 ('unsupervised'  , ['nlc', 'cvos', 'trc', 'msg', 'key', 'sal', 'fst']),
 								 ('semisupervised', ['tsp', 'sea', 'hvs', 'jmp', 'fcp'])]
 
 	for mtype,techniques in method_type:
