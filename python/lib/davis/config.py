@@ -53,9 +53,16 @@ __C.FILES = edict()
 # Path to property file, holding information on evaluation sequences.
 __C.FILES.DB_INFO = osp.abspath(osp.join(__C.PATH.DATA_DIR,"Annotations/db_info.yml"))
 
+# Define the set of techniques to be loaded
+__C.EVAL_SET="cvpr2016" # Accepted options [cvpr2016,all]
+
+assert __C.EVAL_SET == 'cvpr2016' or __C.EVAL_SET == 'all'
+
 # Path to technique file, holding information about benchmark data
 __C.FILES.DB_BENCHMARK          = osp.abspath(
 		osp.join(__C.PATH.RESULTS_DIR,"Evaluation/db_benchmark.yml"))
+
+# Path to technique file, holding information about the CVPR 2016 benchmark data
 __C.FILES.DB_BENCHMARK_CVPR2016 = osp.abspath(
 		osp.join(__C.PATH.RESULTS_DIR,"Evaluation/db_benchmark_cvpr2016.yml"))
 

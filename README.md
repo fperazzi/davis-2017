@@ -53,8 +53,9 @@ Installation
 1. pip install virtualenv virtualenvwrapper
 2. source /usr/local/bin/virtualenvwrapper.sh
 3. mkvirtualenv davis
-3. pip install -r python/requirements.txt
-4. export PYTHONPATH=$(pwd)/python/lib
+4. pip install -r python/requirements.txt
+5. export PYTHONPATH=$(pwd)/python/lib
+6. See ROOT/python/lib/davis/config.py for a list of available options
 
 Documentation
 ----------------
@@ -72,8 +73,6 @@ The directory is structured as follows:
  * `ROOT/data` :
      - `get_davis.sh`: download input images and annotations.
      - `get_davis_cvpr2016_results.sh`: download the CVPR 2016 submission results.
-
-
 
 Contacts
 ------------------

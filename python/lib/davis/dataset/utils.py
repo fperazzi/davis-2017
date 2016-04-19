@@ -122,6 +122,10 @@ def db_read_info():
 
 def db_read_benchmark(db_name=cfg.FILES.DB_BENCHMARK):
 	""" Read benchmark data from file."""
+
+	db_name=cfg.FILES.DB_BENCHMARK if cfg.EVAL_SET.lower() == 'all' \
+			else cfg.FILES.DB_BENCHMARK_CVPR2016
+
 	with open(db_name,'r') as f:
 		return edict(yaml.load(f.read()))
 
@@ -131,7 +135,7 @@ def db_read_sequences():
 
 def db_read_techniques(db_name=cfg.FILES.DB_BENCHMARK):
 	""" Read list of benchmarked techniques."""
-	return db_read_benchmark(db_name).techniques
+	return db_read_benchmark().techniques
 
 def db_read_eval(technique=None,measure=None,
 		sequence=None,raw_eval=False,inputdir=cfg.PATH.EVAL_DIR):

@@ -39,10 +39,6 @@ def parse_args():
 	parser.add_argument('--statistic', dest='statistic',default='M',
 			help='Measure statistics: [M]ean,[R]ecall,[D]ecay.')
 
-	parser.add_argument('--cvpr2016',
-			dest='cvpr2016',action='store_true',
-			help='Evaluate the subset of techniques available during the cvpr2016 submission.')
-
 	args = parser.parse_args()
 
 	return args
@@ -52,11 +48,8 @@ if __name__ == '__main__':
 	# Parse command-line arguments
 	args = parse_args()
 
-	db_name = cfg.FILES.DB_BENCHMARK_CVPR2016 if args.cvpr2016 else \
-			cfg.FILES.DB_BENCHMARK
-
 	db_info = db_read_info()
-	db_techniques = db_read_techniques(db_name)
+	db_techniques = db_read_techniques()
 
 	attributes = db_info.attributes
 	distr      = []

@@ -70,10 +70,7 @@ if __name__ == '__main__':
 		#db_save_techniques(db_eval_dict) # UNCOMMENT after T measure is implemented
 
 	# Read available techniques and print results
-	db_name = cfg.FILES.DB_BENCHMARK_CVPR2016 if args.cvpr2016 else \
-			cfg.FILES.DB_BENCHMARK
-
-	db_techniques = db_read_techniques(db_name) # NEED SOME RENAMING
+	db_techniques = db_read_techniques()
 
 	# Display results
 	table = ptable(['Measure']+[t.name for t in db_techniques])
