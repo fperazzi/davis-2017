@@ -74,7 +74,8 @@ def db_eval_sequence(technique,sequence,inputdir):
 
 	J,j_M,j_O,j_D = db_sequence.eval(db_segmentation,'J')
 	F,f_M,f_O,f_D = db_sequence.eval(db_segmentation,'F')
-	T,t_M,_,_     = (np.ones(len(J))*np.nan,np.nan,np.nan,np.nan) # CHANGE
+	#T,t_M,_,_     = (np.ones(len(J))*np.nan,np.nan,np.nan,np.nan) # CHANGE
+	T,t_M,_,_ = db_sequence.eval(db_segmentation,'T')
 
 	return  J,j_M,j_O,j_D,F,f_M,f_O,f_D,T,t_M
 

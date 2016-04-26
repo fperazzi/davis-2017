@@ -36,7 +36,7 @@ import copy
 import skimage.io
 import numpy as np
 
-from davis.measures import db_eval_boundary,db_eval_iou
+from davis.measures import db_eval_boundary,db_eval_iou,db_eval_t_stab
 
 def _load_annotation(fname,img_num=0):
 	return skimage.io.imread(fname,as_grey=True)
@@ -189,7 +189,7 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 		super(DAVISAnnotationLoader, self).__init__(
 				cfg,sequence,None,ext_im,ext_an,load_func)
 
-	def _eval(self,db_segmentation,eval_func):
+	def _eval(self,db_segmentation,eval_func,measure):
 		annotations = self._masks[1:-1]
 
 		# Strip of first and last frame if available
@@ -198,8 +198,13 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 
 		assert len(annotations) == len(segmentation)
 
-		X = np.array([np.nan]+[eval_func(an,sg) for an,sg
-				in zip(annotations,segmentation)] + [np.nan])
+		if measure == 'T':
+			X = np.array([np.nan]+[eval_func(an,sg) for an,sg
+				in zip(segmentation[:-1],segmentation[1:])] + [np.nan])
+			print X
+		else:
+			X = np.array([np.nan]+[eval_func(an,sg) for an,sg
+					in zip(annotations,segmentation)] + [np.nan])
 
 		from utils import db_statistics
 		M,O,D = db_statistics(X)
@@ -223,10 +228,10 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 		"""
 
 		if measure == 'J':
-			return self._eval(db_segmentation,db_eval_iou)
+			return self._eval(db_segmentation,db_eval_iou,measure)
 		elif measure=='F':
-			return self._eval(db_segmentation,db_eval_boundary)
+			return self._eval(db_segmentation,db_eval_boundary,measure)
 		elif measure=='T':
-			raise NotImplementedError
+			return self._eval(db_segmentation,db_eval_t_stab,measure)
 		else:
 			raise Exception, "Unknown measure=[%s]. Valid options are measure={J,F,T}"%measure

@@ -35,10 +35,6 @@ def parse_args():
 			dest='compute',action='store_true',
 			help='Compute results instead of loading from file.')
 
-	parser.add_argument('--cvpr2016',
-			dest='cvpr2016',action='store_true',
-			help='Evaluate the subset of techniques available during the cvpr2016 submission.')
-
 	# Parse command-line arguments
 	return parser.parse_args()
 
