@@ -26,6 +26,7 @@ import sys
 import numpy as np
 import scipy.spatial.distance as ssd
 from tstab import *
+import time
 
 def get_bijective_pairs(pairs,costmat):
 	bij_pairs = bij_pairs_one_dim(pairs, costmat,0)
@@ -122,8 +123,13 @@ def sc_compute(Bsamp,Tsamp,mean_dist,nbins_theta,nbins_r,r_inner,r_outer,out_vec
 			r_array_q[n,fzn].astype(np.int).reshape(-1,1)))
 
 		# SLOW...
-		for i,j in coords:
-			Sn[i-1,j-1] += 1
+		#for i,j in coords:
+			#Sn[i-1,j-1] += 1
+
+		# FASTER
+		ids = np.ravel_multi_index((coords.T-1).astype(np.int),Sn.shape)
+		Sn  = np.bincount(ids.ravel(),minlength = np.prod(Sn.shape)).reshape(Sn.shape)
+
 
 		BH[n,:] = Sn.T[:].ravel()
 
@@ -326,7 +332,6 @@ def db_eval_t_stab(foreground_mask,ground_truth,timing=True):
 
 	et = time.time()
 	poly1 = mask2poly(foreground_mask,cont_th)
-
 	print "mask2poly: %.5f secs"%(time.time()-et)
 	poly2 = mask2poly(ground_truth,cont_th)
 
@@ -334,21 +339,31 @@ def db_eval_t_stab(foreground_mask,ground_truth,timing=True):
 			len(poly2.contour_coords) == 0:
 		return np.nan,[]
 
+	et = time.time()
 	Cs1 = get_longest_cont(poly1.contour_coords)
+	print "get_longest_cont: %.5f secs"%(time.time()-et)
 	Cs2 = get_longest_cont(poly2.contour_coords)
 
+	et = time.time()
 	upCs1 = contour_upsample(Cs1,cont_th_up)
+	print "contour_upsample: %.5f secs"%(time.time()-et)
 	upCs2 = contour_upsample(Cs2,cont_th_up)
 
+	et = time.time()
 	scs1,_=sc_compute(upCs1.T,np.zeros((1,upCs1.shape[0])),None,
 			nbins_theta,nbins_r,r_inner,r_outer,np.zeros((1,upCs1.shape[0])))
+	print "sc_compute: %.5f secs"%(time.time()-et)
 
 	scs2,_=sc_compute(upCs2.T,np.zeros((1,upCs2.shape[0])),None,
 			nbins_theta,nbins_r,r_inner,r_outer,np.zeros((1,upCs2.shape[0])))
 
 	# Match with the 0-0 alignment
+	et = time.time()
 	costmat              = hist_cost_2(scs1,scs2)
+	print "hist_cost_2: %.5f secs"%(time.time()-et)
+	et = time.time()
 	pairs ,max_sx,max_sy = match_dijkstra(np.ascontiguousarray(costmat))
+	print "match_dijkstra: %.5f secs"%(time.time()-et)
 
 
 	# Shift costmat
@@ -356,13 +371,17 @@ def db_eval_t_stab(foreground_mask,ground_truth,timing=True):
 	costmat2 = np.roll(costmat2,-(max_sx+1),axis=0)
 
 	# Redo again with the correct alignment
+	et = time.time()
 	pairs,_,_ = match_dijkstra(costmat2)
+	print "match_dijkstra: %.5f secs"%(time.time()-et)
 
 	# Put the pairs back to the original place
 	pairs[:,0] = np.mod(pairs[:,0]+max_sx+1, costmat.shape[0])
 	pairs[:,1] = np.mod(pairs[:,1]+max_sy+1, costmat.shape[1])
 
+	et = time.time()
 	pairs = get_bijective_pairs(pairs,costmat)
+	print "get_bijective_pairs: %.5f secs"%(time.time()-et)
 
 	pairs_cost = costmat[pairs[:,0], pairs[:,1]]
 	min_cost   = np.average(pairs_cost)

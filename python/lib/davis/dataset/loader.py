@@ -232,6 +232,7 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 		elif measure=='F':
 			return self._eval(db_segmentation,db_eval_boundary,measure)
 		elif measure=='T':
-			return self._eval(db_segmentation,db_eval_t_stab,measure)
+			magic_number = 5.0 # To match matlab implementation
+			return self._eval(db_segmentation,db_eval_t_stab,measure)*magic_number
 		else:
 			raise Exception, "Unknown measure=[%s]. Valid options are measure={J,F,T}"%measure
