@@ -9,6 +9,7 @@
 import glob
 import h5py
 import yaml
+import warnings
 
 import numpy   as np
 import os.path as osp
@@ -33,8 +34,10 @@ def db_statistics(per_frame_values):
 	"""
 
 	# strip off nan values
-	M = np.nanmean(per_frame_values)
-	O = np.nanmean(per_frame_values[1:-1]>0.5)
+	with warnings.catch_warnings():
+		warnings.simplefilter("ignore", category=RuntimeWarning)
+		M = np.nanmean(per_frame_values)
+		O = np.nanmean(per_frame_values[1:-1]>0.5)
 
 	# Compute decay as implemented in Matlab
 	per_frame_values = per_frame_values[1:] # Remove first frame
@@ -74,8 +77,17 @@ def db_eval_sequence(technique,sequence,inputdir):
 
 	J,j_M,j_O,j_D = db_sequence.eval(db_segmentation,'J')
 	F,f_M,f_O,f_D = db_sequence.eval(db_segmentation,'F')
-	#T,t_M,_,_     = (np.ones(len(J))*np.nan,np.nan,np.nan,np.nan) # CHANGE
-	T,t_M,_,_ = db_sequence.eval(db_segmentation,'T')
+
+
+	# Check if T can be evaluated on this sequence
+	db_sequences_t_eval = map(lambda s: s.name if s.eval_t else None,
+			db_read_sequences())
+
+	if sequence in db_sequences_t_eval:
+		T,t_M,_,_     = db_sequence.eval(db_segmentation,'T')
+	else:
+		T,t_M = np.ones_like(J[1:])*np.nan, np.nan
+
 
 	return  J,j_M,j_O,j_D,F,f_M,f_O,f_D,T,t_M
 

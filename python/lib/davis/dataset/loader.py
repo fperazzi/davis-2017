@@ -189,7 +189,7 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 		super(DAVISAnnotationLoader, self).__init__(
 				cfg,sequence,None,ext_im,ext_an,load_func)
 
-	def _eval(self,db_segmentation,eval_func,measure):
+	def _eval(self,db_segmentation,eval_func,measure,scale=1):
 		annotations = self._masks[1:-1]
 
 		# Strip of first and last frame if available
@@ -199,15 +199,17 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 		assert len(annotations) == len(segmentation)
 
 		if measure == 'T':
-			X = np.array([np.nan]+[eval_func(an,sg) for an,sg
+			magic_number = 5.0
+			X = np.array([np.nan]+[eval_func(an,sg)*magic_number for an,sg
 				in zip(segmentation[:-1],segmentation[1:])] + [np.nan])
-			print X
 		else:
 			X = np.array([np.nan]+[eval_func(an,sg) for an,sg
 					in zip(annotations,segmentation)] + [np.nan])
 
 		from utils import db_statistics
 		M,O,D = db_statistics(X)
+
+		if measure == 'T': O = D = np.nan
 
 		return X,M,O,D
 
@@ -232,7 +234,6 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 		elif measure=='F':
 			return self._eval(db_segmentation,db_eval_boundary,measure)
 		elif measure=='T':
-			magic_number = 5.0 # To match matlab implementation
-			return self._eval(db_segmentation,db_eval_t_stab,measure)*magic_number
+			return self._eval(db_segmentation,db_eval_t_stab,measure)
 		else:
 			raise Exception, "Unknown measure=[%s]. Valid options are measure={J,F,T}"%measure

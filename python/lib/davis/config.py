@@ -70,8 +70,7 @@ __C.FILES.DB_BENCHMARK_CVPR2016 = osp.abspath(
 __C.N_JOBS = 32
 
 # append path for cpp libraries
-def set_path_to_cpp_libs():
-	print "SETPATH"
+def _set_path_to_cpp_libs():
 	sys.path.append(osp.abspath(
 		osp.join(cfg.PATH.ROOT_DIR,'build/release')))
 

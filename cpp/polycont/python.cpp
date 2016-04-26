@@ -44,8 +44,8 @@ struct _ContContainer: public ContContainer
 _ContContainer _mask2poly(const np::ndarray& pymask, float tolerance) {
 
 		np::dtype dtype = np::dtype::get_builtin<bool>();
-		// Required transposition to match matlab impl
 
+		// Required transposition to match matlab impl
 		np::ndarray _pymask = np::zeros(py::make_tuple(pymask.shape(1), pymask.shape(0)),
 				np::dtype::get_builtin<bool>());
 
@@ -56,12 +56,8 @@ _ContContainer _mask2poly(const np::ndarray& pymask, float tolerance) {
 			}
 		}
 
-		//cout << pymask.shape(0) << " " << pymask.shape(1) << endl;
-		//cout << _pymask.shape(0) << " " << _pymask.shape(1) << endl;
-
 		Eigen::Map<Eigen::Array<bool,Eigen::Dynamic,Eigen::Dynamic> >
 						mask((bool*)_pymask.get_data(),_pymask.shape(1),_pymask.shape(0));
-
 
     /* Output contours */
     _ContContainer all_conts;
@@ -150,33 +146,6 @@ np::ndarray _contour_upsample(const np::ndarray cont, float cont_th) {
 	}
 	return res;
 }
-//function [up_cont, original_marker] = contour_upsample(cont, cont_th)
-    //cont = [cont; cont(1,:)];
-    //v = diff(cont);
-    //nv = arrayfun(@(idx) norm(v(idx,:)), 1:size(v,1))';
-
-    //up_cont = [];
-    //original_marker = [];
-    //for ii=1:length(nv)
-        //up_cont = [up_cont; cont(ii,:)]; %#ok<AGROW>
-        //original_marker = [original_marker; 1]; %#ok<AGROW>
-
-        //% If segment is too long, resample in between
-        //if nv(ii)>cont_th
-            //n_segm = ceil(nv(ii)/cont_th);
-            //curr_point = up_cont(end,:);
-            //vec = v(ii,:)/n_segm;
-            //for jj=1:n_segm-1
-                //curr_point = curr_point + vec;
-                //up_cont = [up_cont; curr_point]; %#ok<AGROW>
-                //original_marker = [original_marker; 0]; %#ok<AGROW>
-            //end
-        //end
-    //end
-
-    //original_marker = logical(original_marker);
-//end
-
 // ------------------------------------------------------------------------
 // Jordi Pont-Tuset - http://jponttuset.github.io/
 // April 2016
@@ -216,7 +185,7 @@ std::vector<vertex_descriptor> run_one_dijkstra(std::list<Edge>& edge_list, std:
 }
 
 
-py::tuple match_dijkstra(const np::ndarray& prhs) {
+py::tuple _match_dijkstra(const np::ndarray& prhs) {
 
 		np::ndarray _prhs = np::zeros(py::make_tuple(prhs.shape(1),prhs.shape(0)),
 				np::dtype::get_builtin<double>());
@@ -263,20 +232,6 @@ py::tuple match_dijkstra(const np::ndarray& prhs) {
 								edge_list.emplace_back(sub2ind(xx,yy-1),sub2ind(xx,yy));
 								edge_costs.emplace_back(costs(xx,yy));
 						}
-//             else
-//             {
-//                 [> Last with first <]
-//                 edge_list.emplace_back(sub2ind(xx,n2-1),sub2ind(xx,yy));
-//                 edge_costs.emplace_back(costs(xx,yy));
-//
-//                 if (xx>0)
-//                 {
-//                     [> Add diagonal also in these cases <]
-//                     edge_list.emplace_back(sub2ind(xx-1,n2-1),sub2ind(xx,yy));
-//                     edge_costs.emplace_back(costs(xx,yy));
-//                 }
-//             }
-
 						//[> Left <]
 						if (xx>0)
 						{
@@ -336,11 +291,6 @@ BOOST_PYTHON_MODULE(tstab) {
 	// Initialize numpy
 	np::initialize();
 
-	//py::class_<ContContainer,std::shared_ptr<Path>>(
-			//"Path",py::init<int>())
-		//.def_readwrite("end_junc",&Path::orig_junc)
-		//.def_readwrite("orig_junc",&Path::orig_junc);
-
 	py::class_<_ContContainer,std::shared_ptr<_ContContainer>>(
 			"ContContainer")
 		.def_readwrite("contour_coords",&_ContContainer::contour_coords)
@@ -351,7 +301,7 @@ BOOST_PYTHON_MODULE(tstab) {
 	py::def("mask2poly",_mask2poly);
 	py::def("get_longest_cont",_get_longest_cont);
 	py::def("contour_upsample",_contour_upsample);
-	py::def("match_dijkstra",match_dijkstra);
+	py::def("match_dijkstra",_match_dijkstra);
 
 	boost::python::class_<std::vector<bool>>("PyVecBool")
 			.def(boost::python::vector_indexing_suite<std::vector<bool>,true >());
