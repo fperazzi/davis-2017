@@ -48,7 +48,10 @@ def db_statistics(per_frame_values):
 	ids = ids.astype(np.uint8)
 
 	D_bins = [per_frame_values[ids[i]:ids[i+1]+1] for i in range(0,4)]
-	D      = np.nanmean(D_bins[0])-np.nanmean(D_bins[3])
+
+	with warnings.catch_warnings():
+		warnings.simplefilter("ignore", category=RuntimeWarning)
+		D = np.nanmean(D_bins[0])-np.nanmean(D_bins[3])
 
 	return M,O,D
 

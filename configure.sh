@@ -1,3 +1,5 @@
+#! /usr/bin/env sh
+
 #=============================================================================
 #     FileName: configure.sh
 #         Desc: Makefile generator
@@ -7,7 +9,13 @@
 #   LastChange: 2012-03-22 21:42:25
 #=============================================================================
 
-#! /usr/bin/env sh
+# ----------------------------------------------------------------------------
+# A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation
+#-----------------------------------------------------------------------------
+# Copyright (c) 2016 Federico Perazzi
+# Licensed under the BSD License [see LICENSE for details]
+# Written by Federico Perazzi
+# ----------------------------------------------------------------------------
 
 if cmake --version >/dev/null 2>&1
 then

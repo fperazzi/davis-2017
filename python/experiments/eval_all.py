@@ -57,7 +57,8 @@ if __name__ == '__main__':
 		sequences  = [s.name for s in db_read_sequences()]
 
 		# Compute full evaluation and save results
-		db_save_eval(db_eval(techniques,sequences))
+		for technique in techniques:
+			db_save_eval(db_eval(technique,sequences))
 
 		# Read results from file
 		db_eval_dict = db_read_eval(raw_eval=False)

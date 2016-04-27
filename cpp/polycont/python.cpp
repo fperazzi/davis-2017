@@ -1,4 +1,9 @@
-#include <polycont/mask2poly.hpp>
+// ------------------------------------------------------------------------
+//  Copyright (C)
+//  Federico Perazzi <perazzif@inf.ethz.ch>
+//  April 2016
+// ------------------------------------------------------------------------
+#include <polycont/cpp/mask2poly.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python.hpp>
 #include <boost/numpy.hpp>
@@ -16,15 +21,6 @@
 
 namespace py = boost::python;
 namespace np = boost::numpy;
-
-// ------------------------------------------------------------------------
-//  Copyright (C)
-//  Disney Research, Zurich
-//
-//  Jordi Pont-Tuset <jponttuset@vision.ee.ethz.ch>
-//  June 2014
-// ------------------------------------------------------------------------
-// mask2poly_mex(mask, border, simplify_tol)
 
 #include <Eigen/Dense>
 #include "cpp/mask2polycont.hpp"
