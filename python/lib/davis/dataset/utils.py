@@ -18,7 +18,7 @@ from easydict        import EasyDict as edict
 from davis.parallel  import Parallel,delayed
 from collections     import defaultdict,OrderedDict
 
-from davis  import cfg
+from davis  import cfg,log,Timer
 from loader import DAVISAnnotationLoader,DAVISSegmentationLoader
 
 def db_statistics(per_frame_values):
@@ -91,7 +91,7 @@ def db_eval_sequence(technique,sequence,inputdir):
 
 	return  J,j_M,j_O,j_D,F,f_M,f_O,f_D,T,t_M
 
-def db_eval(techniques,sequences,inputdir=cfg.PATH.RESULTS_DIR):
+def db_eval(techniques,sequences,inputdir=cfg.PATH.SEGMENTATION_DIR):
 
 	""" Perform per-frame sequence evaluation.
 
@@ -112,10 +112,16 @@ def db_eval(techniques,sequences,inputdir=cfg.PATH.RESULTS_DIR):
 	db_eval_dict = ndict()
 
 	# RAW, per-frame evaluation
+	timer = Timer()
+	log.info("Number of cores allocated: %d"%cfg.N_JOBS)
 	for technique in techniques:
+		log.info('Evaluating technique: "%s"'%technique)
+		timer.tic()
+
 		J,j_M,j_O,j_D,F,f_M,f_O,f_D,T,t_M = \
 				 zip(*Parallel(n_jobs=cfg.N_JOBS)(delayed(db_eval_sequence)(
 			technique,sequence,inputdir) for sequence in sequences))
+		log.info('Processing time: "%.3f"'%timer.toc())
 
 		# STORE RAW EVALUATION
 		for seq_id,sequence in enumerate(sequences):
@@ -215,8 +221,11 @@ def db_save_eval(db_eval_dict,outputdir=cfg.PATH.EVAL_DIR):
 
 	"""
 
+
 	for technique in db_eval_dict.keys():
-		db_hdf5 = h5py.File(osp.join(outputdir,technique + ".h5"),'w')
+		outfilename = osp.join(outputdir,technique + ".h5")
+		log.info("Saving evaluation in: %s"%outfilename)
+		db_hdf5 = h5py.File(outfilename,'w')
 		for measure in db_eval_dict[technique].keys():
 			for sequence,val in db_eval_dict[technique][measure].iteritems():
 				db_hdf5["%s/%s"%(measure,sequence)] = val

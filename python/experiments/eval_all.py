@@ -23,7 +23,7 @@ import argparse
 import numpy   as np
 import os.path as osp
 
-from davis import cfg
+from davis import cfg,log
 from davis.dataset import *
 from prettytable import PrettyTable as ptable
 
@@ -43,18 +43,18 @@ if __name__ == '__main__':
 	args = parse_args()
 
 	if args.compute:
-		print "- DAVIS: Running full evaluation."
+		log.info('Running full evaluation on DAVIS')
+		log.info('Searching available techniques in: "%s"'%cfg.PATH.SEGMENTATION_DIR)
 
 		# Search available techniques within the default output folder
 		techniques = sorted([osp.splitext(osp.basename(t))[0]
 				for t in glob.glob(cfg.PATH.SEGMENTATION_DIR+ "/*")])
 
-		# Read sequences from file
-		sequences  = [s.name for s in db_read_sequences()]
+		log.info('Number of techniques being evaluated: %d'%len(techniques))
 
-		print "\nThe following techniques are being evaluated:\n"
-		for t in techniques:
-			print " - %s"%t
+		# Read sequences from file
+		log.info('Reading sequences from: %s '%osp.basename(cfg.FILES.DB_INFO))
+		sequences  = [s.name for s in db_read_sequences()]
 
 		# Compute full evaluation and save results
 		db_save_eval(db_eval(techniques,sequences))
@@ -65,7 +65,9 @@ if __name__ == '__main__':
 		# Save techniques attributes and results
 		#db_save_techniques(db_eval_dict) # UNCOMMENT after T measure is implemented
 
-	# Read available techniques and print results
+	log.info('Reading available techniques and results from: %s'%
+			osp.basename(cfg.FILES.DB_BENCHMARK))
+
 	db_techniques = db_read_techniques()
 
 	# Display results
@@ -77,4 +79,4 @@ if __name__ == '__main__':
 	for row,measure in zip(X,['J(M)','J(O)','J(D)','F(M)','F(O)','F(D)','T(M)']):
 		table.add_row([measure]+["{: .3f}".format(r) for r in row])
 
-	print table
+	print "\n" + str(table) + "\n"

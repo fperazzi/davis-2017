@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # ----------------------------------------------------------------------------
 # A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation
 #-----------------------------------------------------------------------------
@@ -5,9 +7,11 @@
 # Licensed under the BSD License [see LICENSE for details]
 # Written by Federico Perazzi
 # ----------------------------------------------------------------------------
-from logger import logging as log
-from timer import Timer
-from config import cfg,_set_path_to_cpp_libs
-_set_path_to_cpp_libs()
 
-from dataset.loader import DAVISAnnotationLoader,DAVISSegmentationLoader
+import logging
+
+FORMAT = '[%(levelname)s]%(asctime)-15s %(message)s'
+logging.basicConfig(
+		level=logging.INFO,format=FORMAT,datefmt='[%d-%m-%Y %H:%M:%S]')
+
+

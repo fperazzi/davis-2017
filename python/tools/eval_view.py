@@ -25,6 +25,7 @@ import os.path as osp
 
 from prettytable import PrettyTable as ptable
 from davis.dataset import *
+from davis import log
 
 def parse_args():
 	"""Parse input arguments."""
@@ -53,6 +54,9 @@ if __name__ == '__main__':
 	db_benchmark = db_read_benchmark()
 	db_sequences = db_read_sequences()
 
+
+	log.info("Displaying evaluation of: %s"%osp.basename(args.input))
+
 	table = ptable(["Sequence"] + ['J(M)','J(O)','J(D)','F(M)','F(O)','F(D)','T(M)'])
 
 	X = []
@@ -66,5 +70,5 @@ if __name__ == '__main__':
 	table.add_row(['Average'] +
 			["{: .3f}".format(n) for n in np.nanmean(X,axis=0)])
 
-	print table
+	print "\n" + str(table) + "\n"
 

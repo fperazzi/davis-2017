@@ -13,11 +13,11 @@ __version__ = '1.0.0'
 #
 # Interface for accessing the DAVIS dataset.
 #
-# DAVIS is a video dataset designed for segmentation. The API implemented
-# in this file provides functionalities for loading, parsing and
-# visualizing  images and annotations available in DAVIS.
-# Please visit [PROJECT PAGE] for more information on DAVIS, including
-# data, paper and supplementary material.
+# DAVIS is a video dataset designed for segmentation. The API implemented in
+# this file provides functionalities for loading, parsing and visualizing
+# images and annotations available in DAVIS. Please visit
+# [https://graphics.ethz.ch/~perazzif/davis] for more information on DAVIS,
+# including data, paper and supplementary material.
 #
 # The following API functions are defined:
 #	DAVISSegmentationLoader - Class that loads DAVIS data.
@@ -36,6 +36,7 @@ import copy
 import skimage.io
 import numpy as np
 
+from davis import log
 from davis.measures import db_eval_boundary,db_eval_iou,db_eval_t_stab
 
 def _load_annotation(fname,img_num=0):
@@ -64,6 +65,11 @@ class DAVISSegmentationLoader(object):
 			ext_an="png", load_func=_load_annotation):
 
 		super(DAVISSegmentationLoader, self).__init__()
+
+		if masks_dir is None:
+			log.info('Loading annotations  of sequence: "%s"'%sequence)
+		else:
+			log.info('Loading segmentation of sequence: "%s"'%sequence)
 
 		self._cfg				= cfg
 		self.name				= sequence

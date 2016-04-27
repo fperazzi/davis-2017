@@ -41,19 +41,19 @@ def parse_args():
 			dest='output',default=None,type=str,
 			help='Output folder')
 
-	args       = parser.parse_args()
-	args.input = osp.abspath(args.input)
+	args = parser.parse_args()
 
 	return args
 
 if __name__ == '__main__':
 
-	args = parse_args()
+	args       = parse_args()
+	args.input = osp.abspath(args.input)
 
-	db_eval_dict = db_eval(osp.basename(args.input),
-			os.listdir(args.input),osp.dirname(args.input))
+	#db_eval_dict = db_eval(osp.basename(args.input),
+			#os.listdir(args.input),osp.dirname(args.input))
 
 	print "Saving results in: %s"%osp.join(
 			args.output,osp.basename(args.input))+".h5"
 
-	db_save_eval(db_eval_dict,outputdir=args.output)
+	#db_save_eval(db_eval_dict,outputdir=args.output)

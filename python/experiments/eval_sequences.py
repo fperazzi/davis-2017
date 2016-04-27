@@ -23,13 +23,12 @@ import argparse
 import numpy   as np
 import os.path as osp
 
-from davis import cfg
+from davis import cfg,log
 from davis.dataset import *
 
 from prettytable import PrettyTable as ptable
 
-if __name__ == '__main__':
-
+def parse_args():
 	parser = argparse.ArgumentParser(
 			description='Perform full evaluation.')
 
@@ -42,12 +41,18 @@ if __name__ == '__main__':
 			help='Evaluate results instead of loading from file.')
 
 	# Parse command-line arguments
-	args = parser.parse_args()
+	return parser.parse_args()
+
+
+if __name__ == '__main__':
+
+	args = parse_args()
 
 	db_sequences  = db_read_sequences()
 	db_techniques = db_read_techniques()
 
 	# Read results from file
+	log.info("Reading evaluation from: %s"%cfg.FILES.DB_BENCHMARK)
 	db_eval_dict = db_read_eval(
 			measure=args.measure,raw_eval=False)
 
@@ -71,4 +76,4 @@ if __name__ == '__main__':
 	table.add_row(["Average"] + ['{: .3f}'.format(r)
 		for r in np.average(R,axis=0)])
 
-	print table
+	print "\n" + str(table) + "\n"
