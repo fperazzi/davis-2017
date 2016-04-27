@@ -40,11 +40,10 @@ def db_statistics(per_frame_values):
 		O = np.nanmean(per_frame_values[1:-1]>0.5)
 
 	# Compute decay as implemented in Matlab
-	per_frame_values = per_frame_values[1:] # Remove first frame
+	per_frame_values = per_frame_values[1:-1] # Remove first frame
 
 	N_bins = 4
-	#ids = np.round(np.linspace(1, len(per_frame_values),N_bins+1)).astype(np.uint)-1
-	ids = np.round(np.linspace(1,len(per_frame_values)-1,N_bins+1))-1;
+	ids = np.round(np.linspace(1,len(per_frame_values),N_bins+1)+1e-10)-1;
 	ids = ids.astype(np.uint8)
 
 	D_bins = [per_frame_values[ids[i]:ids[i+1]+1] for i in range(0,4)]
