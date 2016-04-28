@@ -5,7 +5,7 @@
 
 FILE=davis-results-04192016.zip
 URL=https://graphics.ethz.ch/Downloads/Data/Davis
-CHECKSUM=aba98321f0ea09ec2c78efaad3532bc9
+CHECKSUM=d6c8384fd1db4a2e1932f5a17b91df06
 
 if [ ! -f $FILE ]; then
 	echo "Downloading DAVIS input (1.9GB)..."
