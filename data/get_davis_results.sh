@@ -28,10 +28,10 @@ if [ "$checksum" = "$CHECKSUM" ]; then
 	unzip $FILE
 
 	# Put in folder "davis"
-	mkdir -p davis && mv $FILE/* davis/ && rm -r $FILE
+	mkdir -p davis && mv ${FILE%.*}/* davis/ && rm -r $FILE
 else
 	echo "Checksum is incorrect. Need to download again."
 fi
 
-rm -rf $FILE
+rm -rf $FILE ${FILE%.*}
 
