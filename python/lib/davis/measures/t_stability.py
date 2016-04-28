@@ -89,136 +89,19 @@ def sc_compute(Bsamp,Tsamp,mean_dist,nbins_theta,nbins_r,r_inner,r_outer,out_vec
 
 	return BH.astype(np.int),mean_dist
 
+def db_eval_t_stab(fgmask,ground_truth,timing=True):
+	"""
 
-#def t_stability2(foreground_mask,ground_truth):
-	#def read_matlab_matrix(filename,delimiter):
-		#with open(filename) as f:
-			#return np.array([[float(x) for x in line.rstrip().split(delimiter)] for line in f.readlines()])
-	##% [T, raw_results] =  t_stability( object, ground_truth )
-	##% ------------------------------------------------------------------------
-	##% Jordi Pont-Tuset - http://jponttuset.github.io/
-	##% April 2016
-	##% ------------------------------------------------------------------------
-	##% This file is part of the DAVIS package presented in:
-	##%   Federico Perazzi, Jordi Pont-Tuset, Brian McWilliams,
-	##%   Luc Van Gool, Markus Gross, Alexander Sorkine-Hornung
-	##%   A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation
-	##%   CVPR 2016
-	##% Please consider citing the paper if you use this code.
-	##% ------------------------------------------------------------------------
-	##% Calculates the temporal stability index between two masks
-	##% ------------------------------------------------------------------------
-	##% INPUT
-	##%         object      Object mask.
-	##%   ground_truth      Ground-truth mask.
-	##%
-	##% OUTPUT
-	##%              T      Temporal (in-)stability
-	##%    raw_results      Supplemental values
-	##% ------------------------------------------------------------------------
-		## Parameters
+	Calculates the temporal stability index between two masks
 
-	#cont_th = 3
-	#cont_th_up = 3
+	Arguments:
+					fgmask (ndarray):  Foreground Object mask at frame t
+		ground_truth (ndarray):  Foreground Object mask at frame t+1
 
-	## Shape context parameters
-	#r_inner     = 1.0/8.0
-	#r_outer     = 2.0
-	#nbins_r     = 5.0
-	#nbins_theta = 12.0
-
-	#poly1 = mask2poly(foreground_mask         ,cont_th)
-	#poly2 = mask2poly(ground_truth,cont_th)
-
-	#if len(poly1.contour_coords) == 0 or \
-			#len(poly2.contour_coords) == 0:
-		#return np.nan,[]
-
-	#Cs1 = get_longest_cont(poly1.contour_coords)
-	#Cs2 = get_longest_cont(poly2.contour_coords)
-	#print len(Cs1)
-	#print len(Cs2)
-
-	##upCs1 = contour_upsample(Cs1,cont_th_up)
-	##print Cs1
-	##print Cs1.shape
-	#print Cs2.shape
-	#print Cs2
-	#sys.exit(0)
-	#upCs2 = contour_upsample(Cs2,cont_th_up)
-
-	#print len(upCs1),len(upCs2)
-
-	#upCs1_matlab = read_matlab_matrix("/tmp/upCs1",',').astype(np.int)
-	#upCs2_matlab = read_matlab_matrix("/tmp/upCs2",',').astype(np.int)
-
-	#print len(upCs1_matlab),len(upCs2_matlab)
-	#upCs2 = upCs2_matlab
-	#upCs1 = upCs1_matlab
-
-	#scs1,_=sc_compute(upCs1.T,np.zeros((1,upCs1.shape[0])),None,
-			#nbins_theta,nbins_r,r_inner,r_outer,np.zeros((1,upCs1.shape[0])))
-
-	#scs2,_=sc_compute(upCs2.T,np.zeros((1,upCs2.shape[0])),None,
-			#nbins_theta,nbins_r,r_inner,r_outer,np.zeros((1,upCs2.shape[0])))
-
-	#scs1_matlab = read_matlab_matrix("/tmp/scs1",',').astype(np.int)
-	#scs2_matlab = read_matlab_matrix("/tmp/scs2",',').astype(np.int)
-
-	#print np.isclose(np.sum(scs1 - scs1_matlab),0)
-	#print np.isclose(np.sum(scs2 - scs2_matlab),0)
-
-	## Match with the 0-0 alignment
-	#costmat        = hist_cost_2(scs1,scs2)
-	#costmat_matlab = read_matlab_matrix('/tmp/costmat',',')
-
-	#print np.allclose(costmat_matlab,costmat,rtol=0,atol=1e-2)
-	#print costmat_matlab.shape
-
-	#pairs_matlab         = read_matlab_matrix('/tmp/pairs',',')
-	#pairs ,max_sx,max_sy = match_dijkstra(np.ascontiguousarray(costmat_matlab))
-	#print np.allclose(pairs+1,pairs_matlab)
-
-
-	## Shift costmat
-	#costmat2 = np.roll(costmat ,-(max_sy+1),axis=1)
-	#costmat2 = np.roll(costmat2,-(max_sx+1),axis=0)
-
-	#costmat2_matlab = read_matlab_matrix('/tmp/costmat2',',')
-	#print np.allclose(costmat2_matlab,costmat2,rtol=0,atol=1e-2)
-
-
-	## Redo again with the correct alignment
-	#pairs,_,_ = match_dijkstra(costmat2_matlab)
-
-	#pairs_matlab   = read_matlab_matrix('/tmp/pairs2',',')
-	#print np.allclose(pairs+1,pairs_matlab)
-
-	## Put the pairs back to the original place
-	#pairs[:,0] = np.mod(pairs[:,0]+max_sx+1, costmat.shape[0])
-	#pairs[:,1] = np.mod(pairs[:,1]+max_sy+1, costmat.shape[1])
-
-	#pairs_mod_matlab = read_matlab_matrix('/tmp/pairs_mod',',')
-	#print np.allclose((pairs+1).astype(np.int),pairs_mod_matlab.astype(np.int))
-
-
-	#pairs = get_bijective_pairs(pairs,costmat_matlab)
-	#pairs_bji_matlab = read_matlab_matrix('/tmp/pairs_bij',',')
-	#print pairs.shape,pairs_bji_matlab.shape
-	#print np.allclose((pairs+1).astype(np.int),pairs_bji_matlab.astype(np.int))
-	##for p in pairs:
-		##print p
-	##sys.exit(0)
-
-	##sys.exit(0)
-
-	#pairs_cost = costmat_matlab[pairs[:,0], pairs[:,1]]
-	#min_cost   = np.average(pairs_cost)
-
-	#return min_cost
-
-def db_eval_t_stab(foreground_mask,ground_truth,timing=True):
-	# Parameters
+	Return:
+							 T (ndarray):  Temporal (in-)stability
+	   raw_results (ndarray):  Supplemental values
+	"""
 
 	cont_th = 3
 	cont_th_up = 3
@@ -229,7 +112,7 @@ def db_eval_t_stab(foreground_mask,ground_truth,timing=True):
 	nbins_r     = 5.0
 	nbins_theta = 12.0
 
-	poly1 = mask2poly(foreground_mask,cont_th)
+	poly1 = mask2poly(fgmask,cont_th)
 	poly2 = mask2poly(ground_truth,cont_th)
 
 	if len(poly1.contour_coords) == 0 or \
