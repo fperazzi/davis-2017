@@ -64,7 +64,7 @@ if __name__ == '__main__':
 		db_eval_dict = db_read_eval(raw_eval=False)
 
 		# Save techniques attributes and results
-		#db_save_techniques(db_eval_dict) # UNCOMMENT after T measure is implemented
+		db_save_techniques(db_eval_dict)
 
 	log.info('Reading available techniques and results from: %s'%
 			osp.basename(cfg.FILES.DB_BENCHMARK))

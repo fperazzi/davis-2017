@@ -243,7 +243,7 @@ def db_save_techniques(db_eval_dict,filename=cfg.FILES.DB_BENCHMARK):
 
 	method_type = [('preprocessing' , ['mcg', 'sf-lab','sf-mot']),
 								 ('unsupervised'  , ['nlc', 'cvos', 'trc', 'msg', 'key', 'sal', 'fst']),
-								 ('semisupervised', ['tsp', 'sea', 'hvs', 'jmp', 'fcp'])]
+								 ('semisupervised', ['tsp', 'sea', 'hvs', 'jmp', 'fcp','bvs'])]
 
 	for mtype,techniques in method_type:
 		for technique in techniques:
@@ -259,7 +259,7 @@ def db_save_techniques(db_eval_dict,filename=cfg.FILES.DB_BENCHMARK):
 						'type'       : mtype,
 						'J'          : gmr(scores['J']),
 						'F'          : gmr(scores['F']),
-						'T'          : gmr(scores['T'])
+						'T'          : [gmr(scores['T'])[0],np.nan,np.nan]
 					})
 
 	with open(filename,'w') as f:

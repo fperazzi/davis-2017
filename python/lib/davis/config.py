@@ -55,7 +55,7 @@ __C.FILES = edict()
 __C.FILES.DB_INFO = osp.abspath(osp.join(__C.PATH.DATA_DIR,"Annotations/db_info.yml"))
 
 # Define the set of techniques to be loaded
-__C.EVAL_SET="cvpr2016" # Accepted options [cvpr2016,all]
+__C.EVAL_SET="all" # Accepted options [cvpr2016,all]
 
 assert __C.EVAL_SET == 'cvpr2016' or __C.EVAL_SET == 'all'
 
