@@ -13,11 +13,11 @@ __version__ = '1.0.0'
 #
 # Interface for accessing the DAVIS dataset.
 #
-# DAVIS is a video dataset designed for segmentation. The API implemented
-# in this file provides functionalities for loading, parsing and
-# visualizing  images and annotations available in DAVIS.
-# Please visit [PROJECT PAGE] for more information on DAVIS, including
-# data, paper and supplementary material.
+# DAVIS is a video dataset designed for segmentation. The API implemented in
+# this file provides functionalities for loading, parsing and visualizing
+# images and annotations available in DAVIS. Please visit
+# [https://graphics.ethz.ch/~perazzif/davis] for more information on DAVIS,
+# including data, paper and supplementary material.
 #
 # The following API functions are defined:
 #	DAVISSegmentationLoader - Class that loads DAVIS data.
@@ -36,7 +36,8 @@ import copy
 import skimage.io
 import numpy as np
 
-from davis.measures import db_eval_boundary,db_eval_iou
+from davis import log
+from davis.measures import db_eval_boundary,db_eval_iou,db_eval_t_stab
 
 def _load_annotation(fname,img_num=0):
 	return skimage.io.imread(fname,as_grey=True)
@@ -189,7 +190,7 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 		super(DAVISAnnotationLoader, self).__init__(
 				cfg,sequence,None,ext_im,ext_an,load_func)
 
-	def _eval(self,db_segmentation,eval_func):
+	def _eval(self,db_segmentation,eval_func,measure,scale=1):
 		annotations = self._masks[1:-1]
 
 		# Strip of first and last frame if available
@@ -198,11 +199,18 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 
 		assert len(annotations) == len(segmentation)
 
-		X = np.array([np.nan]+[eval_func(an,sg) for an,sg
-				in zip(annotations,segmentation)] + [np.nan])
+		if measure == 'T':
+			magic_number = 5.0
+			X = np.array([np.nan]+[eval_func(an,sg)*magic_number for an,sg
+				in zip(segmentation[:-1],segmentation[1:])] + [np.nan])
+		else:
+			X = np.array([np.nan]+[eval_func(an,sg) for an,sg
+					in zip(annotations,segmentation)] + [np.nan])
 
 		from utils import db_statistics
 		M,O,D = db_statistics(X)
+
+		if measure == 'T': O = D = np.nan
 
 		return X,M,O,D
 
@@ -223,10 +231,10 @@ class DAVISAnnotationLoader(DAVISSegmentationLoader):
 		"""
 
 		if measure == 'J':
-			return self._eval(db_segmentation,db_eval_iou)
+			return self._eval(db_segmentation,db_eval_iou,measure)
 		elif measure=='F':
-			return self._eval(db_segmentation,db_eval_boundary)
+			return self._eval(db_segmentation,db_eval_boundary,measure)
 		elif measure=='T':
-			raise NotImplementedError
+			return self._eval(db_segmentation,db_eval_t_stab,measure)
 		else:
 			raise Exception, "Unknown measure=[%s]. Valid options are measure={J,F,T}"%measure

@@ -50,6 +50,10 @@ Required:
 
 Installation
 --------------
+C++
+1. ./configure.sh && make -C build/release
+
+Python:
 1. pip install virtualenv virtualenvwrapper
 2. source /usr/local/bin/virtualenvwrapper.sh
 3. mkvirtualenv davis

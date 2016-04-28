@@ -23,7 +23,7 @@ import argparse
 import numpy   as np
 import os.path as osp
 
-from davis import cfg
+from davis import cfg,log
 from davis.dataset import *
 
 from prettytable import PrettyTable as ptable
@@ -56,8 +56,10 @@ if __name__ == '__main__':
 
 	A = []
 
+
 	for attribute in args.attributes:
 		# Filter sequences tagged with `attribute`
+		log.info("Filtering sequences with attribute: %s"%attribute)
 		sequences = filter(
 				lambda s: attribute in s.attributes,db_sequences)
 
@@ -80,4 +82,4 @@ if __name__ == '__main__':
 		table.add_row([attr] + \
 				['{: .2f}'.format(np.round(r,2)) for r in row])
 
-	print table
+	print "\n" + str(table) + "\n"

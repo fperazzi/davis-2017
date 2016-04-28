@@ -23,7 +23,7 @@ import argparse
 import numpy   as np
 import os.path as osp
 
-from davis import cfg
+from davis import cfg,log
 from davis.dataset import *
 
 from prettytable import PrettyTable as ptable
@@ -55,7 +55,9 @@ if __name__ == '__main__':
 	distr      = []
 	S          = []
 
+
 	for t_set in db_info.sets:
+		log.info("Filtering techniques in: %s"%(t_set))
 		# Filter sequences tagged with set=`t_set`
 		X = []
 		db_sequences = filter(

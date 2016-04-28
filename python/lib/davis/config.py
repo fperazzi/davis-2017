@@ -12,6 +12,7 @@
 import os
 import os.path as osp
 
+import sys
 import yaml
 from easydict import EasyDict as edict
 
@@ -54,7 +55,7 @@ __C.FILES = edict()
 __C.FILES.DB_INFO = osp.abspath(osp.join(__C.PATH.DATA_DIR,"Annotations/db_info.yml"))
 
 # Define the set of techniques to be loaded
-__C.EVAL_SET="cvpr2016" # Accepted options [cvpr2016,all]
+__C.EVAL_SET="all" # Accepted options [cvpr2016,all]
 
 assert __C.EVAL_SET == 'cvpr2016' or __C.EVAL_SET == 'all'
 
@@ -66,4 +67,10 @@ __C.FILES.DB_BENCHMARK          = osp.abspath(
 __C.FILES.DB_BENCHMARK_CVPR2016 = osp.abspath(
 		osp.join(__C.PATH.RESULTS_DIR,"Evaluation/db_benchmark_cvpr2016.yml"))
 
-__C.N_JOBS = 8
+__C.N_JOBS = 32
+
+# append path for cpp libraries
+def _set_path_to_cpp_libs():
+	sys.path.append(osp.abspath(
+		osp.join(cfg.PATH.ROOT_DIR,'build/release')))
+

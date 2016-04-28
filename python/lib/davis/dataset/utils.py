@@ -9,6 +9,7 @@
 import glob
 import h5py
 import yaml
+import warnings
 
 import numpy   as np
 import os.path as osp
@@ -17,7 +18,7 @@ from easydict        import EasyDict as edict
 from davis.parallel  import Parallel,delayed
 from collections     import defaultdict,OrderedDict
 
-from davis  import cfg
+from davis  import cfg,log,Timer
 from loader import DAVISAnnotationLoader,DAVISSegmentationLoader
 
 def db_statistics(per_frame_values):
@@ -33,19 +34,23 @@ def db_statistics(per_frame_values):
 	"""
 
 	# strip off nan values
-	M = np.nanmean(per_frame_values)
-	O = np.nanmean(per_frame_values[1:-1]>0.5)
+	with warnings.catch_warnings():
+		warnings.simplefilter("ignore", category=RuntimeWarning)
+		M = np.nanmean(per_frame_values)
+		O = np.nanmean(per_frame_values[1:-1]>0.5)
 
 	# Compute decay as implemented in Matlab
-	per_frame_values = per_frame_values[1:] # Remove first frame
+	per_frame_values = per_frame_values[1:-1] # Remove first frame
 
 	N_bins = 4
-	#ids = np.round(np.linspace(1, len(per_frame_values),N_bins+1)).astype(np.uint)-1
-	ids = np.round(np.linspace(1,len(per_frame_values)-1,N_bins+1))-1;
+	ids = np.round(np.linspace(1,len(per_frame_values),N_bins+1)+1e-10)-1;
 	ids = ids.astype(np.uint8)
 
 	D_bins = [per_frame_values[ids[i]:ids[i+1]+1] for i in range(0,4)]
-	D      = np.nanmean(D_bins[0])-np.nanmean(D_bins[3])
+
+	with warnings.catch_warnings():
+		warnings.simplefilter("ignore", category=RuntimeWarning)
+		D = np.nanmean(D_bins[0])-np.nanmean(D_bins[3])
 
 	return M,O,D
 
@@ -74,11 +79,21 @@ def db_eval_sequence(technique,sequence,inputdir):
 
 	J,j_M,j_O,j_D = db_sequence.eval(db_segmentation,'J')
 	F,f_M,f_O,f_D = db_sequence.eval(db_segmentation,'F')
-	T,t_M,_,_     = (np.ones(len(J))*np.nan,np.nan,np.nan,np.nan) # CHANGE
+
+
+	# Check if T can be evaluated on this sequence
+	db_sequences_t_eval = map(lambda s: s.name if s.eval_t else None,
+			db_read_sequences())
+
+	if sequence in db_sequences_t_eval:
+		T,t_M,_,_     = db_sequence.eval(db_segmentation,'T')
+	else:
+		T,t_M = np.ones_like(J[1:])*np.nan, np.nan
+
 
 	return  J,j_M,j_O,j_D,F,f_M,f_O,f_D,T,t_M
 
-def db_eval(techniques,sequences,inputdir=cfg.PATH.RESULTS_DIR):
+def db_eval(techniques,sequences,inputdir=cfg.PATH.SEGMENTATION_DIR):
 
 	""" Perform per-frame sequence evaluation.
 
@@ -99,10 +114,16 @@ def db_eval(techniques,sequences,inputdir=cfg.PATH.RESULTS_DIR):
 	db_eval_dict = ndict()
 
 	# RAW, per-frame evaluation
+	timer = Timer()
+	log.info("Number of cores allocated: %d"%cfg.N_JOBS)
 	for technique in techniques:
+		log.info('Evaluating technique: "%s"'%technique)
+		timer.tic()
+
 		J,j_M,j_O,j_D,F,f_M,f_O,f_D,T,t_M = \
 				 zip(*Parallel(n_jobs=cfg.N_JOBS)(delayed(db_eval_sequence)(
 			technique,sequence,inputdir) for sequence in sequences))
+		log.info('Processing time: "%.3f"'%timer.toc())
 
 		# STORE RAW EVALUATION
 		for seq_id,sequence in enumerate(sequences):
@@ -202,8 +223,11 @@ def db_save_eval(db_eval_dict,outputdir=cfg.PATH.EVAL_DIR):
 
 	"""
 
+
 	for technique in db_eval_dict.keys():
-		db_hdf5 = h5py.File(osp.join(outputdir,technique + ".h5"),'w')
+		outfilename = osp.join(outputdir,technique + ".h5")
+		log.info("Saving evaluation in: %s"%outfilename)
+		db_hdf5 = h5py.File(outfilename,'w')
 		for measure in db_eval_dict[technique].keys():
 			for sequence,val in db_eval_dict[technique][measure].iteritems():
 				db_hdf5["%s/%s"%(measure,sequence)] = val
@@ -219,7 +243,7 @@ def db_save_techniques(db_eval_dict,filename=cfg.FILES.DB_BENCHMARK):
 
 	method_type = [('preprocessing' , ['mcg', 'sf-lab','sf-mot']),
 								 ('unsupervised'  , ['nlc', 'cvos', 'trc', 'msg', 'key', 'sal', 'fst']),
-								 ('semisupervised', ['tsp', 'sea', 'hvs', 'jmp', 'fcp'])]
+								 ('semisupervised', ['tsp', 'sea', 'hvs', 'jmp', 'fcp','bvs'])]
 
 	for mtype,techniques in method_type:
 		for technique in techniques:
@@ -235,7 +259,7 @@ def db_save_techniques(db_eval_dict,filename=cfg.FILES.DB_BENCHMARK):
 						'type'       : mtype,
 						'J'          : gmr(scores['J']),
 						'F'          : gmr(scores['F']),
-						'T'          : gmr(scores['T'])
+						'T'          : [gmr(scores['T'])[0],np.nan,np.nan]
 					})
 
 	with open(filename,'w') as f:
