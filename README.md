@@ -35,7 +35,12 @@ DAVIS is released under the BSD License [see LICENSE for details]
 
 Dependencies
 ------------
-Required:
+C++
+
+ * Boost.Python
+
+Python
+
  * Cython==0.24
  * PyYAML==3.11
  * argparse==1.2.1
@@ -51,9 +56,11 @@ Required:
 Installation
 --------------
 C++
+
 1. ./configure.sh && make -C build/release
 
 Python:
+
 1. pip install virtualenv virtualenvwrapper
 2. source /usr/local/bin/virtualenvwrapper.sh
 3. mkvirtualenv davis
