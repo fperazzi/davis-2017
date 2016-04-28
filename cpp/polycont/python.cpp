@@ -85,7 +85,7 @@ np::ndarray _get_longest_cont(const py::list& contour_coords) {
 
 	for(int jj = 0; jj < py::len(contour_coords); ++jj) {
 		np::ndarray arr = boost::python::extract<np::ndarray>(contour_coords[jj]);
-		if(max_length < arr.shape(0)) {
+		if(max_length <= arr.shape(0)) {
 			max_id     = jj;
 			max_length = arr.shape(0);
 		}

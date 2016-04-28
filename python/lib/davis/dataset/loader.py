@@ -66,11 +66,6 @@ class DAVISSegmentationLoader(object):
 
 		super(DAVISSegmentationLoader, self).__init__()
 
-		if masks_dir is None:
-			log.info('Loading annotations  of sequence: "%s"'%sequence)
-		else:
-			log.info('Loading segmentation of sequence: "%s"'%sequence)
-
 		self._cfg				= cfg
 		self.name				= sequence
 
