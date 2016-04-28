@@ -74,6 +74,8 @@ See source code for documentation.
 
 The directory is structured as follows:
 
+ * `ROOT/cpp`: Implementation and python wrapper ofr the temporal stability.
+
  * `ROOT/python/tools`: contains scripts for evaluating segmentation.
      - `eval.py` : evaluate a technique and store results in HDF5 file
      - `eval_view.py`: read and display evaluation from HDF5.
