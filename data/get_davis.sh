@@ -19,11 +19,11 @@ fi
 # CHECKING MDS
 os=`uname -s`
 if [ "$os" = "Linux" ]; then
-	CHECKSUM=`md5sum $FILE | awk '{ print $1 }'`
+	checksum=`md5sum $FILE | awk '{ print $1 }'`
 elif [ "$os" = "Darwin" ]; then
-	CHECKSUM=`cat $FILE | md5`
+	checksum=`cat $FILE | md5`
 fi
-if [ "$CHECKSUM" = "$CHECKSUM" ]; then
+if [ "$checksum" = "$CHECKSUM" ]; then
 	echo "Checksum is correct."
 	echo "Unzipping..."
 	unzip $FILE
