@@ -3,9 +3,9 @@
 # This scripts downloads the DAVIS data and unzips it.
 # Adaptation of a script written in Faster R-CNN (Ross Girshick)
 
-FILE=davis-results-04192016.zip
+FILE=davis-results.zip
 URL=https://graphics.ethz.ch/Downloads/Data/Davis
-CHECKSUM=d6c8384fd1db4a2e1932f5a17b91df06
+CHECKSUM=dc4eefb8a507891938f9867b21d9a1c4
 
 if [ ! -f $FILE ]; then
 	echo "Downloading DAVIS input (1.9GB)..."
