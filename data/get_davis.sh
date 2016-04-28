@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # This scripts downloads the DAVIS data and unzips it.
 # Adaptation of a script written in Faster R-CNN (Ross Girshick)
@@ -6,7 +6,7 @@
 FILE=davis-data.zip
 URL=https://graphics.ethz.ch/Downloads/Data/Davis
 CHECKSUM=3396a9e5fbc2359d4661205295b44ef3
-
+DIR=$(pwd)/$(dirname "$0")
 
 if [ ! -f $FILE ]; then
 	echo "Downloading DAVIS input (1.9GB)..."
@@ -29,10 +29,7 @@ if [ "$checksum" = "$CHECKSUM" ]; then
 	unzip $FILE
 
 	# Put in folder "davis"
-	mkdir -p davis && mv davis-data/* davis/ && rm -r davis-data
+	mkdir -p $DIR/davis && mv ${FILE%.*}/* $DIR/davis/ && rm -rf $FILE ${FILE%.*}
 else
 	echo "Checksum is incorrect. Need to download again."
 fi
-
-rm -rf $FILE
-
