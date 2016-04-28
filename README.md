@@ -81,7 +81,7 @@ The directory is structured as follows:
      - `eval_view.py`: read and display evaluation from HDF5.
 
  * `ROOT/python/experiments`: contains several demonstrative examples.
- * `ROOT/python/lib/davis`  : library package contains helper function for parsing and evaluating DAVIS
+ * `ROOT/python/lib/davis`  : library package contains helper functions for parsing and evaluating DAVIS
 
  * `ROOT/data` :
      - `get_davis.sh`: download input images and annotations.
