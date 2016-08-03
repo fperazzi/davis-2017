@@ -4,6 +4,8 @@ A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation (DA
 
 Package containing helper functions for loading and evaluating [DAVIS](https://graphics.ethz.ch/~perazzif/davis/index.html).
 
+A [Matlab](https://github.com/jponttuset/davis-matlab) version of the same package is also available.
+
 Introduction
 --------------
 DAVIS (Densely Annotated VIdeo Segmentation), consists of fifty high quality,
