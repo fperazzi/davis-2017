@@ -110,6 +110,18 @@ class DAVISSegmentationLoader(object):
 
 		assert len(self._frames) == len(self._masks) == len(self._images)
 
+		# Compute bounding boxes
+		self._bbs = []
+		for mask in self._masks:
+			coords = np.where(mask!=0)
+			if len(coords[0]) <=1:
+				self._bbs.append(None)
+			else:
+				tl = np.min(coords[1]),np.min(coords[0])
+				br = np.max(coords[1]),np.max(coords[0])
+
+				self._bbs.append((tl[0],tl[1],br[0],br[1]))
+
 		# FINAL SANITY CHECK
 		image_frames = map(lambda fn:
 				int(os.path.splitext(os.path.basename(fn))[0]),self._images.files)
