@@ -149,11 +149,12 @@ def db_read_info():
 def db_read_benchmark(db_name=cfg.FILES.DB_BENCHMARK):
 	""" Read benchmark data from file."""
 
-	db_name=cfg.FILES.DB_BENCHMARK if cfg.EVAL_SET.lower() == 'all' \
-			else cfg.FILES.DB_BENCHMARK_CVPR2016
-
-	with open(db_name,'r') as f:
-		return edict(yaml.load(f.read()))
+	with open(cfg.FILES.DB_BENCHMARK,'r') as f:
+		db_benchmark = edict(yaml.load(f.read()))
+		if cfg.EVAL_SET == 'paper':
+			db_benchmark['techniques'] = filter(
+					lambda technique: technique.eval_set=='paper',db_benchmark['techniques'])
+		return db_benchmark
 
 def db_read_sequences():
 	""" Read list of sequences. """
