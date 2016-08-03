@@ -57,7 +57,7 @@ def db_statistics(per_frame_values):
 #####################################################
 # PERFORM BENCHMARK EVALUATION
 #####################################################
-def db_eval_sequence(technique,sequence,inputdir):
+def db_eval_sequence(technique,sequence,inputdir,metrics=None):
 
 	""" Perform per-frame sequence evaluation.
 
@@ -77,23 +77,28 @@ def db_eval_sequence(technique,sequence,inputdir):
 	db_segmentation = DAVISSegmentationLoader(cfg,sequence,
 			osp.join(inputdir,technique))
 
-	J,j_M,j_O,j_D = db_sequence.eval(db_segmentation,'J')
-	F,f_M,f_O,f_D = db_sequence.eval(db_segmentation,'F')
+	if metrics is None or 'J' in metrics:
+		J,j_M,j_O,j_D = db_sequence.eval(db_segmentation,'J')
+	else:
+		J,j_M,j_O,j_D = [np.nan],np.nan,np.nan,np.nan
 
+	if metrics is None or 'F' in metrics:
+		F,f_M,f_O,f_D = db_sequence.eval(db_segmentation,'F')
+	else:
+		F,f_M,f_O,f_D = [np.nan],np.nan,np.nan,np.nan
 
-	# Check if T can be evaluated on this sequence
 	db_sequences_t_eval = map(lambda s: s.name if s.eval_t else None,
 			db_read_sequences())
 
-	if sequence in db_sequences_t_eval:
-		T,t_M,_,_     = db_sequence.eval(db_segmentation,'T')
+	if sequence in db_sequences_t_eval and (metrics is None or 'T' in metrics):
+		T,t_M,_,_ = db_sequence.eval(db_segmentation,'T')
 	else:
 		T,t_M = np.ones_like(J[1:])*np.nan, np.nan
 
 
 	return  J,j_M,j_O,j_D,F,f_M,f_O,f_D,T,t_M
 
-def db_eval(techniques,sequences,inputdir=cfg.PATH.SEGMENTATION_DIR):
+def db_eval(techniques,sequences,inputdir=cfg.PATH.SEGMENTATION_DIR,metrics=None):
 
 	""" Perform per-frame sequence evaluation.
 
@@ -122,7 +127,7 @@ def db_eval(techniques,sequences,inputdir=cfg.PATH.SEGMENTATION_DIR):
 
 		J,j_M,j_O,j_D,F,f_M,f_O,f_D,T,t_M = \
 				 zip(*Parallel(n_jobs=cfg.N_JOBS)(delayed(db_eval_sequence)(
-			technique,sequence,inputdir) for sequence in sequences))
+			technique,sequence,inputdir,metrics) for sequence in sequences))
 		log.info('Processing time: "%.3f"'%timer.toc())
 
 		# STORE RAW EVALUATION

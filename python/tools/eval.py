@@ -42,6 +42,9 @@ def parse_args():
 			dest='output',default=None,type=str,
 			help='Output folder')
 
+	parser.add_argument(
+			'--metrics',default=None,nargs='+',type=str,choices=['J','F','T'])
+
 	args = parser.parse_args()
 
 	return args
@@ -52,7 +55,7 @@ if __name__ == '__main__':
 	args.input = osp.abspath(args.input)
 
 	db_eval_dict = db_eval(osp.basename(args.input),
-			os.listdir(args.input),osp.dirname(args.input))
+			os.listdir(args.input),osp.dirname(args.input),args.metrics)
 
 	log.info("Saving results in: %s"%osp.join(
 			args.output,osp.basename(args.input))+".h5")
