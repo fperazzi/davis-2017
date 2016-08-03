@@ -32,7 +32,7 @@ __C.RESOLUTION="480p"
 __C.PATH.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..', '..','..'))
 
 # Data folder
-__C.PATH.DATA_DIR       = osp.abspath(osp.join(__C.PATH.ROOT_DIR, 'data/davis'))
+__C.PATH.DATA_DIR       = osp.abspath(osp.join(__C.PATH.ROOT_DIR, 'data/DAVIS'))
 
 __C.PATH.RESULTS_DIR  = osp.abspath(osp.join(__C.PATH.DATA_DIR,  'Results'))
 

@@ -3,9 +3,9 @@
 # This scripts downloads the DAVIS data and unzips it.
 # Adaptation of a script written in Faster R-CNN (Ross Girshick)
 
-FILE=davis-results.zip
+FILE=DAVIS-results.zip
 URL=https://graphics.ethz.ch/Downloads/Data/Davis
-CHECKSUM=7bfab60aefaf63ea5bdb4fe7923ba80e
+CHECKSUM=a24f8fa00c955eb7f94ef47ca8d9a62d
 DIR=$(pwd)/$(dirname "$0")
 
 if [ ! -f $FILE ]; then
@@ -28,11 +28,9 @@ if [ "$checksum" = "$CHECKSUM" ]; then
 	echo "Unzipping..."
 	unzip $FILE
 
-	# Put in folder "davis"
-	mkdir -p $DIR/davis && mv ${FILE%.*}/* $DIR/davis/ && rm -r $FILE
 else
 	echo "Checksum is incorrect. Need to download again."
 fi
 
-rm -rf $FILE ${FILE%.*}
+rm -rf $FILE
 
