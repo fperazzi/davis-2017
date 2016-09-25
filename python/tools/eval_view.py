@@ -51,24 +51,6 @@ if __name__ == '__main__':
 	db_eval_dict = db_read_eval(technique,raw_eval=False,
 			inputdir=osp.dirname(args.input))
 
-	db_benchmark = db_read_benchmark()
-	db_sequences = db_read_sequences()
-
-
 	log.info("Displaying evaluation of: %s"%osp.basename(args.input))
 
-	table = ptable(["Sequence"] + ['J(M)','J(O)','J(D)','F(M)','F(O)','F(D)','T(M)'])
-
-	X = []
-	for key,values in db_eval_dict[technique].iteritems():
-		X.append(db_eval_dict[technique][key].values())
-
-	X = np.hstack(X)[:,:7]
-	for s,row in zip(db_sequences,X):
-		table.add_row([s.name]+ ["{: .3f}".format(n) for n in row])
-
-	table.add_row(['Average'] +
-			["{: .3f}".format(n) for n in np.nanmean(X,axis=0)])
-
-	print "\n" + str(table) + "\n"
-
+	db_eval_view(db_eval_dict,technique)

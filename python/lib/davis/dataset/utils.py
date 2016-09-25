@@ -270,3 +270,23 @@ def db_save_techniques(db_eval_dict,filename=cfg.FILES.DB_BENCHMARK):
 
 	with open(filename,'w') as f:
 		f.write(yaml.dump(db_techniques))
+
+def db_eval_view(db_eval_dict,technique):
+
+	db_sequences = db_read_sequences()
+
+	from prettytable import PrettyTable as ptable
+	table = ptable(["Sequence"] + ['J(M)','J(O)','J(D)','F(M)','F(O)','F(D)','T(M)'])
+
+	X = []
+	for key,values in db_eval_dict[technique].iteritems():
+		X.append(db_eval_dict[technique][key].values())
+
+	X = np.hstack(X)[:,:7]
+	for s,row in zip(db_sequences,X):
+		table.add_row([s.name]+ ["{: .3f}".format(n) for n in row])
+
+	table.add_row(['Average'] +
+			["{: .3f}".format(n) for n in np.nanmean(X,axis=0)])
+
+	print "\n" + str(table) + "\n"
