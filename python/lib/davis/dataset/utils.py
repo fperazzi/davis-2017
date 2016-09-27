@@ -271,7 +271,7 @@ def db_save_techniques(db_eval_dict,filename=cfg.FILES.DB_BENCHMARK):
 	with open(filename,'w') as f:
 		f.write(yaml.dump(db_techniques))
 
-def db_eval_view(db_eval_dict,technique):
+def db_eval_view(db_eval_dict,technique,summary=False):
 
 	db_sequences = db_read_sequences()
 
@@ -283,8 +283,9 @@ def db_eval_view(db_eval_dict,technique):
 		X.append(db_eval_dict[technique][key].values())
 
 	X = np.hstack(X)[:,:7]
-	for s,row in zip(db_sequences,X):
-		table.add_row([s.name]+ ["{: .3f}".format(n) for n in row])
+	if not summary:
+		for s,row in zip(db_sequences,X):
+			table.add_row([s.name]+ ["{: .3f}".format(n) for n in row])
 
 	table.add_row(['Average'] +
 			["{: .3f}".format(n) for n in np.nanmean(X,axis=0)])
