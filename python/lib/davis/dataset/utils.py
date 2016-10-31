@@ -291,3 +291,4 @@ def db_eval_view(db_eval_dict,technique,summary=False):
 			["{: .3f}".format(n) for n in np.nanmean(X,axis=0)])
 
 	print "\n" + str(table) + "\n"
+	return str(table)

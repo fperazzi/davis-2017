@@ -5,7 +5,7 @@
 
 FILE=DAVIS-data.zip
 URL=https://graphics.ethz.ch/Downloads/Data/Davis
-CHECKSUM=464ebb594dcbc34e012487f4cd0f8213
+CHECKSUM=0cb3cf9c5617209fa3cc4794e52a2ffa
 DIR=$(pwd)/$(dirname "$0")
 
 if [ ! -f $FILE ]; then
@@ -23,6 +23,7 @@ if [ "$os" = "Linux" ]; then
 elif [ "$os" = "Darwin" ]; then
 	checksum=`cat $FILE | md5`
 fi
+echo $checksum
 if [ "$checksum" = "$CHECKSUM" ]; then
 	echo "Checksum is correct."
 	echo "Unzipping..."
