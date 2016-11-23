@@ -160,6 +160,10 @@ def db_read_sequences():
 	""" Read list of sequences. """
 	return db_read_info().sequences
 
+def db_read_attributes():
+	""" Read list of sequences. """
+	return db_read_info().attributes
+
 def db_read_techniques(db_name=cfg.FILES.DB_BENCHMARK):
 	""" Read list of benchmarked techniques."""
 	return db_read_benchmark().techniques
@@ -271,7 +275,8 @@ def db_save_techniques(db_eval_dict,filename=cfg.FILES.DB_BENCHMARK):
 	with open(filename,'w') as f:
 		f.write(yaml.dump(db_techniques))
 
-def db_eval_view(db_eval_dict,technique,summary=False):
+def db_eval_view(db_eval_dict,technique,
+		summary=False,eval_set='all'):
 
 	db_sequences = db_read_sequences()
 
@@ -285,10 +290,17 @@ def db_eval_view(db_eval_dict,technique,summary=False):
 	X = np.hstack(X)[:,:7]
 	if not summary:
 		for s,row in zip(db_sequences,X):
-			table.add_row([s.name]+ ["{: .3f}".format(n) for n in row])
+			if eval_set == 'all' or s.set == eval_set:
+				table.add_row([s.name]+ ["{: .3f}".format(n) for n in row])
 
-	table.add_row(['Average'] +
-			["{: .3f}".format(n) for n in np.nanmean(X,axis=0)])
+
+	set_ids = [seq_id for seq_id,seq in enumerate(db_sequences)
+			if eval_set == 'all' or seq.set == eval_set]
+
+	print set_ids
+
+	table.add_row(['Average'] + ["{: .3f}".format(n)
+		for n in np.nanmean(X[set_ids],axis=0)])
 
 	print "\n" + str(table) + "\n"
 	return str(table)

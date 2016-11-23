@@ -36,6 +36,12 @@ def parse_args():
 	parser.add_argument(dest='input',default=None,type=str,
 			help='Path to the HDF5 evaluation file to be displayed.')
 
+	parser.add_argument('--eval_set',default='all',type=str,
+			choices=['training','test','all'],help='Select set of videos to evaluate.')
+
+	parser.add_argument('--summary',action='store_true',
+			choices='Print dataset average instead of per-sequence results.')
+
 	# Parse command-line arguments
 	args       = parser.parse_args()
 	args.input = osp.abspath(args.input)
@@ -53,4 +59,5 @@ if __name__ == '__main__':
 
 	log.info("Displaying evaluation of: %s"%osp.basename(args.input))
 
-	db_eval_view(db_eval_dict,technique)
+	db_eval_view(db_eval_dict,
+			technique,args.summary,args.eval_set)
