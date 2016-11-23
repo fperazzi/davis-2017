@@ -40,7 +40,7 @@ def parse_args():
 			choices=['training','test','all'],help='Select set of videos to evaluate.')
 
 	parser.add_argument('--summary',action='store_true',
-			choices='Print dataset average instead of per-sequence results.')
+			help='Print dataset average instead of per-sequence results.')
 
 	# Parse command-line arguments
 	args       = parser.parse_args()
