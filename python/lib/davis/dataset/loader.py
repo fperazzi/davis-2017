@@ -1,17 +1,17 @@
-#!/usr/bin/env python
-# -------------------------------------------------------------------------------
-# A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation
-# Copyright (c) 2016 Federico Perazzi
+# ----------------------------------------------------------------------------
+# The 2017 DAVIS Challenge on Video Object Segmentation
+#-----------------------------------------------------------------------------
+# Copyright (c) 2017 Federico Perazzi
 # Licensed under the BSD License [see LICENSE for details]
-# Written by Federico Perazzi
-# ------------------------------------------------------------------------------
+# Written by Federico Perazzi (federico@disneyresearch.com)
+# ----------------------------------------------------------------------------
 
 __author__ = 'federico perazzi'
-__version__ = '1.0.0'
+__version__ = '2.0.0'
 
 ########################################################################
 #
-# Interface for accessing the DAVIS dataset.
+# Interface for accessing the DAVIS 2016/2017 dataset.
 #
 # DAVIS is a video dataset designed for segmentation. The API implemented in
 # this file provides functionalities for loading, parsing and visualizing
@@ -19,234 +19,118 @@ __version__ = '1.0.0'
 # [https://graphics.ethz.ch/~perazzif/davis] for more information on DAVIS,
 # including data, paper and supplementary material.
 #
-# The following API functions are defined:
-#	DAVISSegmentationLoader - Class that loads DAVIS data.
-#		images		 - return input images.
-#		masks			 - return segmentation masks.
-#		iternames  - return iterator over tuples of image and mask filenames.
-#		iteritems  - return iterator over tuples of images and masks.
-#
-#	DAVISAnnotationLoader - Class that loads DAVIS annotations and perform evaluation.
-#		eval			- perform evaluation of region similarity (J),
-#								boundary accuracy (F) and temporal stability (T)
 ########################################################################
 
-import os
-import copy
-import skimage.io
+from collections import namedtuple
+
+import davis
 import numpy as np
 
-from davis import log
-from davis.measures import db_eval_boundary,db_eval_iou,db_eval_t_stab
+from PIL import Image
+from base import Sequence, Annotation, BaseLoader, Segmentation
 
-def _load_annotation(fname,img_num=0):
-	return skimage.io.imread(fname,as_grey=True)
+from ..misc.config import cfg,phase,db_read_sequences
 
-class DAVISSegmentationLoader(object):
-	""" Helper class for accessing the DAVIS dataset.
+from easydict import EasyDict as edict
 
-	Arguments:
-		cfg: configuration file provided in davis.config
-		sequence (string): sequence name
-		masks_dir(string): path to segmentation images.
-		ext_im   (string): images file extension
-		ext_an   (string): annotations file extension
-		load_func        : function to load annotations
+class DAVISLoader(object):
+  """
+  Helper class for accessing the DAVIS dataset.
 
-	Functions:
-		eval       : evaluate sequence
-		images		 : return input images
-	  masks			 : return segmentation masks
-	  iternames  : return iterator over tuples of image and mask filenames
-		iteritems  : return iterator over tuples of images and masks
+  Arguments:
+    year          (string): dataset version (2016,2017).
+    phase         (string): dataset set eg. train, val. (See config.phase)
+    single_object (bool):   assign same id (==1) to each object.
 
-	"""
-	def __init__(self,cfg,sequence,masks_dir=None,ext_im="jpg",
-			ext_an="png", load_func=_load_annotation):
+  Members:
+    sequences (list): list of 'Sequence' objects containing RGB frames.
+    annotations(list): list of 'Annotation' objects containing ground-truth segmentations.
+  """
+  def __init__(self,year,db_phase,single_object=True):
+    super(DAVISLoader, self).__init__()
 
-		super(DAVISSegmentationLoader, self).__init__()
+    self.year  = year
+    self.phase = db_phase
+    self.single_object = single_object
 
-		self._cfg				= cfg
-		self.name				= sequence
+    assert year == "2017" or year == "2016"
 
-		self._ext_an		 = ext_an
-		self._ext_im		 = ext_im
-		self._load_func  = load_func
+    # check the phase
+    if year == '2016':
+      if not (db_phase == phase.TRAIN or db_phase == phase.VAL or \
+          db_phase == phase.TRAINVAL):
+            raise Exception("Set \'{}\' not available in DAVIS 2016 ({},{},{})".format(
+              db_phase.name,phase.TRAIN.name,phase.VAL.name,phase.TRAINVAL.name))
 
-		self.images_dir = os.path.join(
-				self._cfg.PATH.SEQUENCES_DIR,self.name)
+    # Check single_object if False iif year is 2016
+    if self.single_object:
+      assert self.year == '2016'
 
-		if masks_dir is None:
-			self.masks_dir = os.path.join(self._cfg.PATH.ANNOTATION_DIR,self.name)
-		else:
-			self.masks_dir = os.path.join(masks_dir,self.name)
+    self._db_sequences = db_read_sequences(year,self.phase)
 
-		assert os.path.isdir(self.images_dir),\
-				"Couldn't find folder: %s"%self.images_dir
+    # Load sequences
+    self.sequences = [Sequence(s.name)
+        for s in self._db_sequences]
 
-		#########################################
-		# LOAD IMAGES AND MASKS
-		#########################################
-		self._images = skimage.io.ImageCollection(self.images_dir+"/*%s"%self._ext_im)
+    # Load sequences
+    self.annotations = [Annotation(s.name,self.single_object)
+        for s in self._db_sequences]
 
-		self._masks = skimage.io.ImageCollection(self.masks_dir+"/*%s"%self._ext_an,
-				load_func=_load_annotation)
+    self._keys = dict(zip([s.name for s in self.sequences],
+      range(len(self.sequences))))
 
-		#assert len(self._masks) != 0 and len(self._images) != 0
-		masks_frames = map(lambda fn:
-				int(os.path.splitext(os.path.basename(fn))[0]),self._masks.files)
+    # Check number of frames is correct
+    for sequence,db_sequence in zip(self.sequences,self._db_sequences):
+      assert len(sequence) == db_sequence.num_frames
 
-		# Loading the ground-truth annotations
-		if masks_dir is None:
-			assert len(self._images) == len(self._masks)
-		else:
-			assert masks_frames[0] == 0 or masks_frames[0] == 1 and \
-					len(masks_frames) == masks_frames[-1] - masks_frames[0] + 1
+    # Check number of annotations is correct
+    for annotation,db_sequence in zip(self.sequences,self._db_sequences):
+      if (self.phase == phase.TRAIN) or (self.phase == phase.VAL):
+        assert len(annotation) == db_sequence.num_frames
+      elif self.phase == phase.TESTDEV:
+        pass
 
-			self._images = self._images[masks_frames[0]:masks_frames[-1]+1]
+    try:
+      self.color_palette = np.array(Image.open(
+        self.annotations[0].files[0]).getpalette()).reshape(-1,3)
+    except Exception as e:
+      self.color_palette = np.array([[0,255,0]])
 
-		self._frames = list(range(masks_frames[0],
-			len(self._images)+masks_frames[0]))
+  def __len__(self):
+    """ Number of sequences."""
+    return len(self.sequences)
 
-		assert len(self._frames) == len(self._masks) == len(self._images)
+  def __iter__(self):
+    """ Iteratator over pairs of (sequence,annotation)."""
+    for sequence,annotation in zip(self.sequences,self.annotations):
+      yield sequence,annotation
 
-		# Compute bounding boxes
-		self._bbs = []
-		for mask in self._masks:
-			coords = np.where(mask!=0)
-			if len(coords[0]) <=1:
-				self._bbs.append(None)
-			else:
-				tl = np.min(coords[1]),np.min(coords[0])
-				br = np.max(coords[1]),np.max(coords[0])
+  def __getitem__(self, key):
+    """ Get sequences and annotations pairs."""
+    if isinstance(key,str):
+      sid = self._keys[key]
+    elif isinstance(key,int):
+      sid = key
+    else:
+      raise InputError()
 
-				self._bbs.append((tl[0],tl[1],br[0],br[1]))
+    return edict({
+      'sequence'  : self.sequences[sid],
+      'annotation': self.annotations[sid]
+      })
 
-		# FINAL SANITY CHECK
-		image_frames = map(lambda fn:
-				int(os.path.splitext(os.path.basename(fn))[0]),self._images.files)
+  def sequence_name_to_id(self,name):
+    """ Map sequence name to index."""
+    return self._keys[name]
 
-		assert np.allclose(image_frames,masks_frames)
+  def sequence_id_to_name(self,sid):
+    """ Map index to sequence name."""
+    return self._db_sequences[sid].name
 
+  def iternames(self):
+    """ Iterator over sequence names."""
+    for s in self._db_sequences:
+      yield s.name
 
-	def __getitem__(self, n):
-		"""
-		Return selected image(s) in the collection.
-		Loading is done on demand.
-		"""
-
-		if hasattr(n, '__index__'):
-			n = n.__index__()
-
-		if type(n) not in [int, slice]:
-		 raise TypeError('slicing must be with an int or slice object')
-
-		if type(n) is int:
-			n = slice(n,n+1) # Cast to slice
-
-		fidx = range(len(self))[n]
-
-		# A slice object was provided.
-		new_ic				 = copy.copy(self)
-		new_ic._masks  = self._masks[n]
-		new_ic._images = self._images[n]
-
-		new_ic._frames = [self._frames[i] for i in fidx]
-
-		return new_ic
-
-	def __len__(self):
-		return len(self._images)
-
-	def __str__(self):
-		return self.name
-
-	@property
-	def masks(self):
-		return self._masks
-
-	@property
-	def images(self):
-		return self._images
-
-	#######################################
-	# ITERATORS
-	#######################################
-	def iternames(self):
-		for im,ma in zip(self.images.files,self._masks.files):
-			yield im,ma
-
-	def iteritems(self):
-		for im,ma in zip(self._images,self._masks):
-			yield im,ma
-
-class DAVISAnnotationLoader(DAVISSegmentationLoader):
-
-	""" Helper class for accessing the DAVIS dataset.
-
-	Arguments:
-		cfg: configuration file provided in davis.config
-		sequence (string): sequence name
-		ext_im   (string): images file extension
-		ext_an   (string): annotations file extension
-		load_func        : function to load annotations
-
-	Functions: (see DAVISSegmentationLoader documentation)
-		eval: evaluate sequence
-
-	"""
-
-	def __init__(self,cfg,sequence,ext_im="jpg",
-			ext_an="png",load_func=_load_annotation):
-
-		super(DAVISAnnotationLoader, self).__init__(
-				cfg,sequence,None,ext_im,ext_an,load_func)
-
-	def _eval(self,db_segmentation,eval_func,measure,scale=1):
-		annotations = self._masks[1:-1]
-
-		# Strip of first and last frame if available
-		segmentation = db_segmentation._masks[
-				1-db_segmentation._frames[0]:len(annotations)+1-db_segmentation._frames[0]]
-
-		assert len(annotations) == len(segmentation)
-
-		if measure == 'T':
-			magic_number = 5.0
-			X = np.array([np.nan]+[eval_func(an,sg)*magic_number for an,sg
-				in zip(segmentation[:-1],segmentation[1:])] + [np.nan])
-		else:
-			X = np.array([np.nan]+[eval_func(an,sg) for an,sg
-					in zip(annotations,segmentation)] + [np.nan])
-
-		from utils import db_statistics
-		M,O,D = db_statistics(X)
-
-		if measure == 'T': O = D = np.nan
-
-		return X,M,O,D
-
-	def eval(self,db_segmentation,measure='J'):
-
-		""" Evaluate sequence.
-
-		Arguments:
-			db_segmentation (DAVISSegmentationLoader) : sequence file to be evaluated.
-			measure         (string: 'J','F','T')     : measure to be computed
-
-		Returns:
-			X: per-frame measure evaluation.
-			M: mean   of per-frame measure.
-			O: recall of per-frame measure.
-			D: decay  of per-frame measure.
-
-		"""
-
-		if measure == 'J':
-			return self._eval(db_segmentation,db_eval_iou,measure)
-		elif measure=='F':
-			return self._eval(db_segmentation,db_eval_boundary,measure)
-		elif measure=='T':
-			return self._eval(db_segmentation,db_eval_t_stab,measure)
-		else:
-			raise Exception, "Unknown measure=[%s]. Valid options are measure={J,F,T}"%measure
+  def iteritems(self):
+    return self.__iter__()

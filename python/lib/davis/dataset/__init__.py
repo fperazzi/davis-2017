@@ -1,13 +1,15 @@
 # ----------------------------------------------------------------------------
-# A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation
+# The 2017 DAVIS Challenge on Video Object Segmentation
 #-----------------------------------------------------------------------------
-# Copyright (c) 2016 Federico Perazzi
+# Copyright (c) 2017 Federico Perazzi
 # Licensed under the BSD License [see LICENSE for details]
-# Written by Federico Perazzi
+# Written by Federico Perazzi (federico@disneyresearch.com)
 # ----------------------------------------------------------------------------
 
-from loader import DAVISAnnotationLoader,DAVISSegmentationLoader
+__author__ = 'federico perazzi'
+__version__ = '2.0.0'
 
-from utils import db_statistics,db_eval,db_read_info,db_read_benchmark,db_read_eval,\
-		db_read_techniques,db_read_eval,db_save_eval,db_read_sequences,db_save_techniques,db_eval_view
+from loader import DAVISLoader
+from base import Annotation, Segmentation, Sequence
 
+from evaluation import *
