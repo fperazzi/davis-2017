@@ -50,22 +50,10 @@ DAVIS is released under the BSD License [see LICENSE for details]
 Dependencies
 ------------
 C++
-
  * Boost.Python
 
 Python
-
- * Cython==0.24
- * PyYAML==3.11
- * argparse==1.2.1
- * easydict==1.6
- * future==0.15.2
- * h5py==2.6.0
- * matplotlib==1.5.1
- * numpy==1.11.0
- * prettytable==0.7.2
- * scikit-image==0.12.3
- * scipy==0.17.0
+ See ROOT/python/requirements.txt (Optionally to visualize results install cv2)
 
 Installation
 --------------
