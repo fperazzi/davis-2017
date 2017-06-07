@@ -1,35 +1,27 @@
 #!/bin/sh
 
-# This scripts downloads the DAVIS data and unzips it.
-# Adaptation of a script written in Faster R-CNN (Ross Girshick)
+# This scripts downloads the DAVIS data and unzip it.
 
-FILE=DAVIS-data.zip
-URL=https://graphics.ethz.ch/Downloads/Data/Davis
-CHECKSUM=0cb3cf9c5617209fa3cc4794e52a2ffa
-DIR=$(pwd)/$(dirname "$0")
+URL=https://data.vision.ee.ethz.ch/jpont/davis
 
-if [ ! -f $FILE ]; then
-	echo "Downloading DAVIS input (1.9GB)..."
-	wget $URL/$FILE
+FILE_TRAINVAL=DAVIS-2017-trainval-480p.zip
+FILE_TESTDEV=DAVIS-2017-test-dev-480p.zip
 
+if [ ! -f $FILE_TRAINVAL ]; then
+  echo "Downloading DAVIS 2017 (train-val)..."
+  wget $URL/$FILE_TRAINVAL
 else
-	echo "File already exists. Checking md5..."
+	echo "File $FILE_TRAINVAL already exists. Checking md5..."
 fi
 
-# CHECKING MDS
-os=`uname -s`
-if [ "$os" = "Linux" ]; then
-	checksum=`md5sum $FILE | awk '{ print $1 }'`
-elif [ "$os" = "Darwin" ]; then
-	checksum=`cat $FILE | md5`
-fi
-echo $checksum
-if [ "$checksum" = "$CHECKSUM" ]; then
-	echo "Checksum is correct."
-	echo "Unzipping..."
-	unzip $FILE
+if [ ! -f $FILE_TESTDEV ]; then
+  echo "Downloading DAVIS 2017 (test-dev)..."
+  wget $URL/$FILE_TESTDEV
 else
-	echo "Checksum is incorrect. Need to download again."
+	echo "File $FILE_TESTDEV already exists. Checking md5..."
 fi
 
-rm -rf $FILE
+unzip -o $FILE_TRAINVAL
+unzip -o $FILE_TESTDEV
+
+rm -rf $FILEjTESTDEV $FILE_TRAINVAL

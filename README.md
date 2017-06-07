@@ -1,5 +1,5 @@
 
-A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation (DAVIS)
+The 2017 DAVIS Challenge on Video Object Segmentation
 =====================================================================================
 
 Package containing helper functions for loading and evaluating [DAVIS](https://graphics.ethz.ch/~perazzif/davis/index.html).
