@@ -19,7 +19,7 @@ Citation
 
 Please cite `DAVIS` in your publications if it helps your research:
 
-    `@inproceedings{Perazzi_CVPR_2016,
+    @inproceedings{Perazzi_CVPR_2016,
       author    = {Federico Perazzi and
                    Jordi Pont-Tuset and
                    Brian McWilliams and
@@ -29,9 +29,9 @@ Please cite `DAVIS` in your publications if it helps your research:
       title     = {A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation},
       booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
       year      = {2016}
-    }`
+    }
 
-    `@article{Pont-Tuset_arXiv_2017,
+    @article{Pont-Tuset_arXiv_2017,
       author  = {Jordi Pont-Tuset and
                  Federico Perazzi and
                  Sergi Caelles and
@@ -41,7 +41,7 @@ Please cite `DAVIS` in your publications if it helps your research:
       title   = {The 2017 DAVIS Challenge on Video Object Segmentation},
       journal = {arXiv:1704.00675},
       year    = {2017}
-    }`
+    }
 
 Terms of Use
 --------------

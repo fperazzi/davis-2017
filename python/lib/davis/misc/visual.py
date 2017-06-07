@@ -30,13 +30,3 @@ def overlay(image,mask,colors=[255,0,0],cscale=2,alpha=0.4):
     im_overlay[countours,:] = 0
 
   return im_overlay.astype(image.dtype)
-
-def imshow(im,an,color_palette):
-  """ Display image using cv2 as backend."""
-
-  ov = overlay(im,an,color_palette)
-  cv2.imshow("Sequence",ov[...,[2,1,0]])
-
-  ch = chr(cv2.waitKey())
-  return ch
-

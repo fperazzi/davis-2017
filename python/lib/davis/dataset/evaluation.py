@@ -9,7 +9,6 @@
 from collections import defaultdict
 
 import numpy as np
-import progressbar
 import skimage.morphology
 
 from easydict import EasyDict as edict
