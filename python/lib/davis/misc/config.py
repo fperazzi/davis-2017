@@ -52,7 +52,7 @@ __C.MULTIOBJECT = True
 __C.PATH.ROOT = osp.abspath(osp.join(osp.dirname(__file__), '../../../..'))
 
 # Data folder
-__C.PATH.DATA = osp.abspath(osp.join(__C.PATH.ROOT, 'python/data/DAVIS'))
+__C.PATH.DATA = osp.abspath(osp.join(__C.PATH.ROOT, 'data/DAVIS'))
 
 # Path to input images
 __C.PATH.SEQUENCES = osp.join(__C.PATH.DATA,"JPEGImages",__C.RESOLUTION)
@@ -64,7 +64,7 @@ __C.PATH.ANNOTATIONS = osp.join(__C.PATH.DATA,"Annotations",__C.RESOLUTION)
 __C.FILES = edict()
 
 # Path to property file, holding information on evaluation sequences.
-__C.FILES.DB_INFO = osp.abspath(osp.join(__C.PATH.ROOT,"db_info.yaml"))
+__C.FILES.DB_INFO = osp.abspath(osp.join(__C.PATH.ROOT,"data/db_info.yaml"))
 
 # Measures and Statistics
 __C.EVAL = edict()
