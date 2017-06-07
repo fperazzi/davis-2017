@@ -8,7 +8,7 @@ A [Matlab](https://github.com/jponttuset/davis-matlab) version of the same packa
 
 Introduction
 --------------
-DAVIS (Densely Annotated VIdeo Segmentation), consists of fifty high quality,
+DAVIS (Densely Annotated VIdeo Segmentation), consists of high quality,
 Full HD video sequences, spanning multiple occurrences of common video object
 segmentation challenges such as occlusions, motion-blur and appearance
 changes. Each video is accompanied by densely annotated, pixel-accurate and
@@ -29,6 +29,18 @@ Please cite `DAVIS` in your publications if it helps your research:
       title     = {A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation},
       booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
       year      = {2016}
+    }`
+
+    `@article{Pont-Tuset_arXiv_2017,
+      author  = {Jordi Pont-Tuset and
+                 Federico Perazzi and
+                 Sergi Caelles and
+                 Pablo Arbel\'aez and
+                 Alexander Sorkine-Hornung and
+                 Luc {Van Gool}},
+      title   = {The 2017 DAVIS Challenge on Video Object Segmentation},
+      journal = {arXiv:1704.00675},
+      year    = {2017}
     }`
 
 Terms of Use
@@ -81,13 +93,12 @@ The directory is structured as follows:
  * `ROOT/python/tools`: contains scripts for evaluating segmentation.
      - `eval.py` : evaluate a technique and store results in HDF5 file
      - `eval_view.py`: read and display evaluation from HDF5.
+     - `visulize.py`: visualize segmentation results.
 
- * `ROOT/python/experiments`: contains several demonstrative examples.
  * `ROOT/python/lib/davis`  : library package contains helper functions for parsing and evaluating DAVIS
 
  * `ROOT/data` :
      - `get_davis.sh`: download input images and annotations.
-     - `get_davis_cvpr2016_results.sh`: download the CVPR 2016 submission results.
 
 Contacts
 ------------------
