@@ -53,7 +53,7 @@ C++
  * Boost.Python
 
 Python
- See ROOT/python/requirements.txt (Optionally to visualize results install cv2)
+ * See ROOT/python/requirements.txt (Optionally to visualize results install cv2)
 
 Installation
 --------------
