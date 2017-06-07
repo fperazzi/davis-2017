@@ -25,12 +25,12 @@ Code Usage
 ### Evaluate
 Execute the script `ROOT/python/tools/eval.py` providing the resulting segmentation and setting the correct phase (train,val etc...) and year (2016,2017). See script documentation for mode details.
 
-Example: `python tools/eval.py -i path-to-my-technique -o results.yaml --year 2017 --phase testdev`
+Example: `python tools/eval.py -i path-to-my-technique -o results.yaml --year 2017 --phase val`
 
 ### Visualize
 Execute the script `ROOT/python/tools/visualize.py`. The command-line arguments are similar to the evaluation script. Use `--single-object` to visualize the original DAVIS 2016.
 
-Example: `python tools/visualize.py -i path-to-my-technique --year 2017 --phase testdev`
+Example: `python tools/visualize.py -i path-to-my-technique --year 2017 --phase val`
 
 Dependencies
 ------------
