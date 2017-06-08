@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 # ----------------------------------------------------------------------------
-# A Benchmark Dataset and Evaluation Methodology for Video Object Segmentation
+# The 2017 DAVIS Challenge on Video Object Segmentation
 #-----------------------------------------------------------------------------
-# Copyright (c) 2016 Federico Perazzi
+# Copyright (c) 2017 Federico Perazzi
 # Licensed under the BSD License [see LICENSE for details]
 # Written by Federico Perazzi
 # ----------------------------------------------------------------------------
