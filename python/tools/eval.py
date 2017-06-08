@@ -22,6 +22,8 @@ import davis
 import numpy as np
 
 from davis import Timer,log,cfg,db_eval
+from davis import DAVISLoader,Segmentation
+
 from prettytable import PrettyTable
 
 def parse_args():
@@ -68,13 +70,13 @@ if __name__ == '__main__':
     args.year,args.phase))
 
   # Load DAVIS
-  db = davis.dataset.DAVISLoader(args.year,
+  db = DAVISLoader(args.year,
       args.phase,args.single_object)
 
   log.info('Loading video segmentations from: {}'.format(args.input))
 
   # Load segmentations
-  segmentations = [davis.dataset.Segmentation(
+  segmentations = [Segmentation(
     osp.join(args.input,s),args.single_object) for s in db.iternames()]
 
   # Evaluate results
@@ -82,11 +84,11 @@ if __name__ == '__main__':
 
   # Print results
   table = PrettyTable(['Method']+[p[0]+'_'+p[1] for p in
-    itertools.product(args.metrics,davis.cfg.EVAL.STATISTICS)])
+    itertools.product(args.metrics,cfg.EVAL.STATISTICS)])
 
   table.add_row([osp.basename(args.input)]+["%.3f"%np.round(
     evaluation['dataset'][metric][statistic],3) for metric,statistic
-    in itertools.product(args.metrics,davis.cfg.EVAL.STATISTICS)])
+    in itertools.product(args.metrics,cfg.EVAL.STATISTICS)])
 
   print str(table) + "\n"
 

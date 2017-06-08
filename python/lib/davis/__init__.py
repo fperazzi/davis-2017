@@ -18,3 +18,4 @@ from misc import Timer   # Timing utility class
 
 from dataset import DAVISLoader,Segmentation,Annotation
 from dataset import db_eval,db_eval_sequence
+from dataset import print_results

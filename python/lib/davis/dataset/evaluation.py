@@ -8,15 +8,15 @@
 
 from collections import defaultdict
 
+import itertools
 import numpy as np
 import skimage.morphology
-
 from easydict import EasyDict as edict
+from prettytable import PrettyTable
 
 from .. import measures
-from ..misc.config import cfg
-
 from ..misc import log
+from ..misc.config import cfg
 from ..misc.parallel import Parallel, delayed
 
 _db_measures = {
@@ -90,4 +90,19 @@ def db_eval(db,segmentations,measures,n_jobs=cfg.N_JOBS,verbose=True):
   g_eval = {'sequence':dict(s_eval),'dataset':dict(d_eval)}
 
   return g_eval
+
+def print_results(evaluation,method_name="-"):
+  """Print result in a table"""
+
+  metrics = evaluation['dataset'].keys()
+
+  # Print results
+  table = PrettyTable(['Method']+[p[0]+'_'+p[1] for p in
+    itertools.product(metrics,cfg.EVAL.STATISTICS)])
+
+  table.add_row([method_name]+["%.3f"%np.round(
+    evaluation['dataset'][metric][statistic],3) for metric,statistic in
+    itertools.product(metrics,cfg.EVAL.STATISTICS)])
+
+  print "\n{}\n".format(str(table))
 
