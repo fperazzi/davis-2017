@@ -21,10 +21,7 @@ import yaml
 import davis
 import numpy as np
 
-from davis import cfg
-from davis.misc import Timer, log
-from davis.dataset import db_eval
-
+from davis import Timer,log,cfg,db_eval
 from prettytable import PrettyTable
 
 def parse_args():

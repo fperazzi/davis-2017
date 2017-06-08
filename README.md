@@ -35,10 +35,10 @@ Example: `python tools/visualize.py -i path-to-my-technique --year 2017 --phase 
 Dependencies
 ------------
 C++
- * Boost.Python
+ * [Boost.Python](https://github.com/ndarray/Boost.NumPy.git)
 
 Python
- * See ROOT/python/requirements.txt (Optionally to visualize results install cv2)
+ * See ROOT/python/requirements.txt (Optionally to visualize results install `cv2`)
 
 Installation
 --------------

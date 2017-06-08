@@ -20,8 +20,7 @@ import davis
 import skimage.io as io
 import prettytable
 
-from davis import DAVISLoader, cfg, phase
-from davis.misc import log, visual
+from davis import DAVISLoader, cfg, phase,log,overlay
 
 def parse_args():
   """Parse input arguments."""
@@ -52,7 +51,7 @@ def parse_args():
 def imshow(im,an,color_palette):
   """ Display image using cv2 as backend."""
 
-  ov = visual.overlay(im,an,color_palette)
+  ov = overlay(im,an,color_palette)
   cv2.imshow("Sequence",ov[...,[2,1,0]])
 
   ch = chr(cv2.waitKey())
@@ -70,9 +69,9 @@ if __name__ == '__main__':
 
   if args.input is None:
     # Visualize ground-truth data
-    for sequence,annotation in db.iteritems():
-      for im,an in zip(sequence,annotation):
-        ch = imshow(im,an,annotation.color_palette)
+    for images,annotations in db.iteritems():
+      for im,an in zip(images,annotations):
+        ch = imshow(im,an,annotations.color_palette)
         if  ch == 'q':
           sys.exit(0)
         elif ch == 's':

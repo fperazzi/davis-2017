@@ -12,4 +12,4 @@ __version__ = '2.0.0'
 from loader import DAVISLoader
 from base import Annotation, Segmentation, Sequence
 
-from evaluation import *
+from evaluation import db_eval,db_eval_sequence

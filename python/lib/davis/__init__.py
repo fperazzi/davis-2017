@@ -10,5 +10,11 @@
 __author__ = 'federico perazzi'
 __version__ = '2.0.0'
 
-from dataset import *
-from misc.config import cfg, phase
+from misc import log     # Logger
+from misc import cfg     # Configuration parameters
+from misc import phase   # Dataset working set (train,val,etc...)
+from misc import overlay # Overlay segmentation on top of RGB image
+from misc import Timer   # Timing utility class
+
+from dataset import DAVISLoader,Segmentation,Annotation
+from dataset import db_eval,db_eval_sequence

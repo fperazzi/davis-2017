@@ -46,34 +46,34 @@ class DAVISLoader(object):
     sequences (list): list of 'Sequence' objects containing RGB frames.
     annotations(list): list of 'Annotation' objects containing ground-truth segmentations.
   """
-  def __init__(self,year,db_phase,single_object=True):
+  def __init__(self,year,phase,single_object=False):
     super(DAVISLoader, self).__init__()
 
-    self.year  = year
-    self.phase = db_phase
-    self.single_object = single_object
+    self._year  = year
+    self._phase = phase
+    self._single_object = single_object
 
     assert year == "2017" or year == "2016"
 
     # check the phase
     if year == '2016':
-      if not (db_phase == phase.TRAIN or db_phase == phase.VAL or \
-          db_phase == phase.TRAINVAL):
+      if not (self._phase == phase.TRAIN or self._phase == phase.VAL or \
+          self._phase == phase.TRAINVAL):
             raise Exception("Set \'{}\' not available in DAVIS 2016 ({},{},{})".format(
-              db_phase.name,phase.TRAIN.name,phase.VAL.name,phase.TRAINVAL.name))
+              self._phase.name,phase.TRAIN.name,phase.VAL.name,phase.TRAINVAL.name))
 
     # Check single_object if False iif year is 2016
-    if self.single_object:
-      assert self.year == '2016'
+    if self._single_object:
+      assert self._year == '2016'
 
-    self._db_sequences = db_read_sequences(year,self.phase)
+    self._db_sequences = db_read_sequences(year,self._phase)
 
     # Load sequences
     self.sequences = [Sequence(s.name)
         for s in self._db_sequences]
 
     # Load sequences
-    self.annotations = [Annotation(s.name,self.single_object)
+    self.annotations = [Annotation(s.name,self._single_object)
         for s in self._db_sequences]
 
     self._keys = dict(zip([s.name for s in self.sequences],
@@ -85,9 +85,9 @@ class DAVISLoader(object):
 
     # Check number of annotations is correct
     for annotation,db_sequence in zip(self.sequences,self._db_sequences):
-      if (self.phase == phase.TRAIN) or (self.phase == phase.VAL):
+      if (self._phase == phase.TRAIN) or (self._phase == phase.VAL):
         assert len(annotation) == db_sequence.num_frames
-      elif self.phase == phase.TESTDEV:
+      elif self._phase == phase.TESTDEV:
         pass
 
     try:
@@ -115,8 +115,8 @@ class DAVISLoader(object):
       raise InputError()
 
     return edict({
-      'sequence'  : self.sequences[sid],
-      'annotation': self.annotations[sid]
+      'images'  : self.sequences[sid],
+      'annotations': self.annotations[sid]
       })
 
   def sequence_name_to_id(self,name):

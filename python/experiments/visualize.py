@@ -9,50 +9,19 @@
 # ----------------------------------------------------------------------------
 
 """
-Visualize sequence annotations.
+Visualize segmentation.
 
 EXAMPLE:
-    python tools/visualize.py
+    python experiments/visualize.py
 
 """
 
 
-import prettytable
-from davis import DAVISLoader,DAVISResults,phase
-from davis.dataset.sequence import Sequence
-import skimage.io as io
-import argparse
 import cv2
+from   davis import cfg,overlay,DAVISLoader
 
-def parse_args():
-	"""Parse input arguments."""
+db = DAVISLoader(year=cfg.YEAR,phase=cfg.PHASE)
+im = overlay(db[0].images[0],db[0].annotations[0],db.color_palette)
 
-	parser = argparse.ArgumentParser(
-			description="Visualize dataset annotations.")
-
-	parser.add_argument(
-			'--year',default='2017',type=str,choices=['2016','2017'],
-      help='Select dataset year.'
-      )
-
-	parser.add_argument(
-			'--phase',default=phase.TRAIN,type=str,
-      help='Select dataset split.'
-      )
-
-	args = parser.parse_args()
-
-	return args
-
-if __name__ == '__main__':
-  args = parse_args()
-
-  db = DAVISLoader(
-      phase=args.phase,
-      year=args.year)
-
-  for sequence in db:
-    for im in sequence.visualize(sequence.annotations):
-      cv2.imshow("Sequence",im[...,[2,1,0]])
-      cv2.waitKey()
-      break
+cv2.imshow("Segmentation",im[...,[2,0,1]])
+cv2.waitKey()

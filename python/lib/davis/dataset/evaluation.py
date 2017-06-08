@@ -80,7 +80,7 @@ def db_eval(db,segmentations,measures,n_jobs=cfg.N_JOBS,verbose=True):
     for sid in range(len(db)):
       sg = segmentations[sid]
       s_eval[sg.name][measure] = db_eval_sequence(sg,
-          db[sg.name].annotation,measure=measure,n_jobs=n_jobs)
+          db[sg.name].annotations,measure=measure,n_jobs=n_jobs)
 
     for statistic in cfg.EVAL.STATISTICS:
       raw_data = np.hstack([s_eval[sequence][measure][statistic] for sequence in
