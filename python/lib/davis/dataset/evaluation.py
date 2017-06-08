@@ -56,7 +56,7 @@ def db_eval_sequence(segmentations,annotations,measure='J',n_jobs=cfg.N_JOBS):
 
   return results
 
-def db_eval(db,segmentations,measures,n_jobs=32,verbose=True):
+def db_eval(db,segmentations,measures,n_jobs=cfg.N_JOBS,verbose=True):
 
   """
   Evaluate video sequence results.
@@ -77,7 +77,7 @@ def db_eval(db,segmentations,measures,n_jobs=32,verbose=True):
 
   for measure in measures:
     log.info("Evaluating measure: {}".format(measure))
-    for sid in range(len(db))[:2]:
+    for sid in range(len(db)):
       sg = segmentations[sid]
       s_eval[sg.name][measure] = db_eval_sequence(sg,
           db[sg.name].annotation,measure=measure,n_jobs=n_jobs)
