@@ -12,7 +12,7 @@ def recall(X,threshold=0.5):
   """
   Fraction of values of X scoring higher than 'threshold'
   """
-  return mean(np.array(X)>0)
+  return mean(np.array(X)>threshold)
 
 def decay(X,n_bins=4):
   """
