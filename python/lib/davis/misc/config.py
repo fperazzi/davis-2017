@@ -60,6 +60,9 @@ __C.PATH.SEQUENCES = osp.join(__C.PATH.DATA,"JPEGImages",__C.RESOLUTION)
 # Path to annotations
 __C.PATH.ANNOTATIONS = osp.join(__C.PATH.DATA,"Annotations",__C.RESOLUTION)
 
+# Color palette
+__C.PATH.PALETTE = osp.abspath(osp.join(__C.PATH.ROOT, 'data/palette.txt'))
+
 # Paths to files
 __C.FILES = edict()
 
@@ -109,3 +112,6 @@ def db_read_sequences(year=None,db_phase=None):
 # Load all sequences
 __C.SEQUENCES = dict([(sequence.name,sequence) for sequence in
   db_read_sequences()])
+
+import numpy as np
+__C.palette = np.loadtxt(__C.PATH.PALETTE,dtype=np.uint8).reshape(-1,3)

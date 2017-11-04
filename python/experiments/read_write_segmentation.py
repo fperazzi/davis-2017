@@ -9,18 +9,24 @@
 # ----------------------------------------------------------------------------
 
 """
-Visualize segmentation.
+Read and write segmentation in indexed format.
 
 EXAMPLE:
-    python experiments/visualize.py
+    python experiments/read_write_segmentation.py
 
 """
 
 import cv2
-from   davis import cfg,overlay,DAVISLoader
+from   davis import cfg,io,DAVISLoader
 
+# Load dataset
 db = DAVISLoader(year=cfg.YEAR,phase=cfg.PHASE)
-im = overlay(db[0].images[0],db[0].annotations[0],db.color_palette)
 
-cv2.imshow("Segmentation",im[...,[2,1,0]])
+# Save an annotation in PNG indexed format to a temporary file
+io.imwrite_indexed('/tmp/anno_indexed.png',db[0].annotations[0])
+
+# Read an image in a temporary file
+an,_ = io.imread_indexed('/tmp/anno_indexed.png')
+
+cv2.imshow("Segmentation",cfg.palette[an][...,[2,1,0]])
 cv2.waitKey()

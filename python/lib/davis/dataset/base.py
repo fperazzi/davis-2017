@@ -15,7 +15,7 @@ from PIL import Image
 from skimage.io import ImageCollection
 
 from ..misc.config import cfg
-from ..misc.io import imread_png_indexed,imsave_png_indexed
+from ..misc.io import imread_indexed,imwrite_indexed
 
 #################################
 # HELPER FUNCTIONS
@@ -24,7 +24,7 @@ from ..misc.io import imread_png_indexed,imsave_png_indexed
 def _load_annotation(filename,single_object):
   """ Load image given filename."""
 
-  annotation,_ = imread_png_indexed(filename)
+  annotation,_ = imread_indexed(filename)
 
   if single_object:
     annotation = (annotation != 0).astype(np.uint8)
