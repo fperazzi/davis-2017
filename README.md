@@ -3,7 +3,6 @@
 The 2017 DAVIS Challenge on Video Object Segmentation
 =====================================================================================
 
-
 Package containing helper functions for loading and evaluating [DAVIS](https://graphics.ethz.ch/~perazzif/davis/index.html).
 
 A [Matlab](https://github.com/jponttuset/davis-matlab) version of the same package is also available.
