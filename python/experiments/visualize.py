@@ -23,5 +23,5 @@ from   davis import cfg,overlay,DAVISLoader
 db = DAVISLoader(year=cfg.YEAR,phase=cfg.PHASE)
 im = overlay(db[0].images[0],db[0].annotations[0],db.color_palette)
 
-cv2.imshow("Segmentation",im[...,[2,0,1]])
+cv2.imshow("Segmentation",im[...,[2,1,0]])
 cv2.waitKey()
