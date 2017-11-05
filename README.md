@@ -37,7 +37,7 @@ In order to evaluate your results, execute the script `ROOT/python/tools/eval.py
 Annotations are provided in PNG indexed format. We provide helper functions to read and write individual images:
 
 * `davis.io.imread_indexed(filename)`
-* `imwrite_indexed(filename,array)`.
+* `davis.io.imwrite_indexed(filename,array)`
 
 Note that for a correct evaluation of the results, it is critical to preserve the same labeling of the annotations, *i.e.* assign identical numbers to corresponding objects.
 
