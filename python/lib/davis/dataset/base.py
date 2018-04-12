@@ -14,7 +14,7 @@ import numpy as np
 from PIL import Image
 from skimage.io import ImageCollection
 
-from ..misc.config import cfg
+from ..misc.config import cfg,phase
 from ..misc.io import imread_indexed,imwrite_indexed
 
 #################################
@@ -72,7 +72,7 @@ class BaseLoader(ImageCollection):
         raise Exception("Sequence name \'{}\' not found.".format(self.name))
 
     # Check sequence length
-    if len(self) != cfg.SEQUENCES[self.name].num_frames:
+    if cfg.PHASE != phase.TESTDEV and len(self) != cfg.SEQUENCES[self.name].num_frames:
       raise Exception("Incorrect frames number for sequence" +
           " \'{}\': found {}, expected {}.".format(
             self.name,len(self),cfg.SEQUENCES[self.name].num_frames))

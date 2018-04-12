@@ -63,8 +63,8 @@ class DAVISLoader(object):
               self._phase.name,phase.TRAIN.name,phase.VAL.name,phase.TRAINVAL.name))
 
     # Check single_object if False iif year is 2016
-    if self._single_object:
-      assert self._year == '2016'
+    if self._single_object and self._year != "2016":
+      raise Exception("Single object segmentation only available for 'year=2016'")
 
     self._db_sequences = db_read_sequences(year,self._phase)
 
