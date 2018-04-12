@@ -21,7 +21,6 @@ Introduction
 
 Code Usage
 --------------
-
 ### Evaluate
 In order to evaluate your results, execute the script `ROOT/python/tools/eval.py` providing the segmentation and setting the correct phase (train,val etc...) and year (2016,2017).
 
@@ -88,6 +87,10 @@ The directory is structured as follows:
      - `get_davis.sh`: download input images and annotations.
 
 See source code for API documentation.
+
+Download Dataset
+----------------
+We provide a script to convenitently download the data. Simply execute: `sh ROOT/data/get_data.sh`. Alternatively the dataset can be downloaded from the [DAVIS Challenge website](http://davischallenge.org/davis2017/code.html).
 
 Citation
 --------------
