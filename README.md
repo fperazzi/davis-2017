@@ -1,4 +1,5 @@
-### Code under development. Keep updated to the latest version.
+### The development of this repository has been discontinued. An active fork of this code is available at [github.com/davisvideochallenge](https://github.com/davisvideochallenge)
+
 
 The 2017 DAVIS Challenge on Video Object Segmentation
 =====================================================================================
